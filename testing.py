@@ -19,8 +19,11 @@ def print_board(width=30, height=20):
     for i in range(height):
         row = []
         for i in range(width):
-            row.append("X")
+            row.append("x")
         board.append(row)
     for row in board:
         print(' '.join(row))
 print_board()
+
+
+# teli karakter: █
