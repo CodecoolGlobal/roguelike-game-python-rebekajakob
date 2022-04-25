@@ -19,7 +19,7 @@ def print_board(width=30, height=20):
     for i in range(height):
         row = []
         for i in range(width):
-            row.append("x")
+            row.append("X")
         board.append(row)
     for row in board:
         print(' '.join(row))
@@ -27,3 +27,10 @@ print_board()
 
 
 # teli karakter: █
+
+"""board number legacy:
+0 = space, where you walk
+1 = border color
+2 = entry door
+3 = exit door
+"""
