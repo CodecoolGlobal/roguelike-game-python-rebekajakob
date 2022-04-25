@@ -1,3 +1,6 @@
+import ui  # TODO just for testing purposes, delete from final code
+
+
 def create_room(entry_door, exit_door, level, width=30, height=20):
     board = []
     for row in range(height):
@@ -70,11 +73,17 @@ def put_player_on_board(board, player):
 
 if __name__ == "__main__":
     room1 = create_room(None, (4, 29), 1)
+    room2 = create_room((5, 0), (19, 26), 2)
+    room3 = create_room((0, 26), None, 3)
+
+    # color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
+    # ui.display_board(room1, color_scheme)
+    # ui.display_board(room2, color_scheme)
+    # ui.display_board(room3, color_scheme)
+
     for i in room1:
         print(" ".join(map(str, i)))
-    room2 = create_room((5, 0), (19, 26), 2)
     for i in room2:
         print(" ".join(map(str, i)))
-    room3 = create_room((0, 26), None, 3)
     for i in room3:
         print(" ".join(map(str, i)))
