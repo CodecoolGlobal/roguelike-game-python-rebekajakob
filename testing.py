@@ -1,8 +1,8 @@
 # coloring
 import colorama
 
-# a = colorama.Fore.CYAN + "Q"
-# print({a})
+a = colorama.Fore.CYAN + "Q" + colorama.Style.RESET_ALL
+print({a})
 
 import util
 def get_keypress():
