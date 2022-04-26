@@ -1,9 +1,4 @@
-import ui  # TODO just for testing purposes, delete from final code
-import util
-import main
-
-
-def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, height=20):
+def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, height=20) -> list:
     """Generates the rooms for the game
     (hard coded rooms)
     """
@@ -55,15 +50,15 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
     return room
 
 
-def place_monster(room, coordinate: tuple):
+def place_monster(room: list, coordinate: tuple) -> None:
     room[coordinate[0]][coordinate[1]] = 6
 
 
-def place_coin(room, coordinate: tuple):
+def place_coin(room: int, coordinate: tuple) -> None:
     room[coordinate[0]][coordinate[1]] = 5
 
 
-def create_board():
+def create_board() -> list:
     """Puts the rooms together into one board list
     (rooms need to be added manually)
     """
@@ -84,7 +79,7 @@ def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
         room[exit_door[0]][exit_door[1]] = 3
 
 
-def place_inner_wall(board, start_wall, end_wall):
+def place_inner_wall(board: list, start_wall: tuple, end_wall: tuple) -> None:
     """Helper function for the room creation
     """
     if start_wall[0] == end_wall[0]:
@@ -95,7 +90,7 @@ def place_inner_wall(board, start_wall, end_wall):
             board[i][start_wall[1]] = 1
 
 
-def put_player_on_board(room, player):
+def put_player_on_board(room: list, player: dict) -> None:
     """puts player on given room,
     needs the player stats
     """
@@ -109,51 +104,52 @@ def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tupl
     return new_player_coordinates
 
 
-def check_target_cell(room, player_coordinates: tuple, direction: tuple):
+def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -> int:
     """checks if the move to the given direction is valid
     returns:
-    1 = valid move to empty cell
-    2 = entry door
-    3 = exit door
-    4 = player
-    5 = coin
-    6 = monster
-    7 = dead monster
+    0 = valid move to empty cell
+    1 = entry door
+    2 = exit door
+    3 = player
+    4 = coin
+    5 = monster
+    6 = dead player
     """
     potential_cell = new_player_position(player_coordinates, direction)
     if room[potential_cell[0]][potential_cell[1]] == 0:
+        return 0
+    elif room[potential_cell[0]][potential_cell[1]] == 1:
         return 1
     elif room[potential_cell[0]][potential_cell[1]] == 2:
         return 2
     elif room[potential_cell[0]][potential_cell[1]] == 3:
         return 3
+    elif room[potential_cell[0]][potential_cell[1]] == 4:
+        return 4
     elif room[potential_cell[0]][potential_cell[1]] == 5:
         return 5
     elif room[potential_cell[0]][potential_cell[1]] == 6:
         return 6
-    elif room[potential_cell[0]][potential_cell[1]] == 7:
-        return 7
 
 
-def check_hp(player):
+def check_hp(player: dict) -> None:
     return player['HP'] <= 0
 
 
-
 if __name__ == "__main__":
-    room1 = create_room(None, (4, 29), 1)
-    room2 = create_room((5, 0), (19, 26), 2)
-    room3 = create_room((0, 26), None, 3)
+    # room1 = create_room(None, (4, 29), 1)
+    # room2 = create_room((5, 0), (19, 26), 2)
+    # room3 = create_room((0, 26), None, 3)
 
-    color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
-    ui.display_board(room1, color_scheme)
-    ui.display_board(room2, color_scheme)
-    ui.display_board(room3, color_scheme)
+    # color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
+    # ui.display_board(room1, color_scheme)
+    # ui.display_board(room2, color_scheme)
+    # ui.display_board(room3, color_scheme)
 
-    for i in room1:
-        print(" ".join(map(str, i)))
-    for i in room2:
-        print(" ".join(map(str, i)))
-    for i in room3:
-        print(" ".join(map(str, i)))
-
+    # for i in room1:
+    #     print(" ".join(map(str, i)))
+    # for i in room2:
+    #     print(" ".join(map(str, i)))
+    # for i in room3:
+    #     print(" ".join(map(str, i)))
+    pass
