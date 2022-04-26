@@ -46,7 +46,7 @@ def create_room(entry_door, exit_door, level, width=30, height=20):
 def create_board():
     board = []
     board.append(create_room(None, (4, 29), 1))
-    board.append(create_room((5, 0), (19, 26), 2))
+    board.append(create_room((4, 0), (19, 26), 2))
     board.append(create_room((0, 26), None, 3))
     return board
 
@@ -76,10 +76,14 @@ def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tupl
     return new_player_coordinates
 
 
-def check_target_cell(room, player_coordinates: tuple, direction: tuple) -> bool:
+def check_target_cell(room, player_coordinates: tuple, direction: tuple):
     potential_cell = new_player_position(player_coordinates, direction)
-    return room[potential_cell[0]][potential_cell[1]] == 0
-
+    if room[potential_cell[0]][potential_cell[1]] == 0:
+        return 1
+    elif room[potential_cell[0]][potential_cell[1]] == 2:
+        return 2
+    elif room[potential_cell[0]][potential_cell[1]] == 3:
+        return 3
 
 
 
