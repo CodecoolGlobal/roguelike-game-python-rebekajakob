@@ -4,3 +4,5 @@ def display_board(board: list, color_scheme: dict) -> None:
             print(color_scheme[cell], end=' ')
         print()
     print()
+
+

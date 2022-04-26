@@ -33,4 +33,5 @@ print_board()
 1 = border color
 2 = entry door
 3 = exit door
+4 = player
 """

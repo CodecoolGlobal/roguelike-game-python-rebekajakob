@@ -67,9 +67,8 @@ def place_inner_wall(board, start_wall, end_wall):
             board[i][start_wall[1]] = 1
 
 
-def put_player_on_board(board, player):
-    if board[0]:
-        board[player['X']][player['Y']]
+def put_player_on_board(room, player):
+    room[player['X']][player['Y']] = 4
 
 
 def new_player_position(player_coordinates: tuple, direction: tuple) -> tuple:
@@ -77,7 +76,7 @@ def new_player_position(player_coordinates: tuple, direction: tuple) -> tuple:
     return player_coordinates
 
 
-def check_target_cell(player_coordinates: tuple, direction: tuple) -> bool:
+def check_target_cell(board, player_coordinates: tuple, direction: tuple) -> bool:
     potential_cell = new_player_position(player_coordinates, direction)
     return board[potential_cell[0]][potential_cell[1]] == ' '
 
