@@ -9,7 +9,8 @@ PLAYER_START_Y = 2
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
 
-color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X', 4: 'O', 5: '☆'}
+# color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X', 4: 'O', 5: '☆'}
+color_scheme = {0: '  ', 1: '🌵', 2: '🚪', 3: '🚪', 4: '🤠', 5: '🌮'}
 
 
 def create_player():
@@ -73,7 +74,7 @@ def main():
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == 6: # player bumped into monster
                 player['HP'] -= 10
-                
+
 
         util.clear_screen()
 
