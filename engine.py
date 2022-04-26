@@ -1,4 +1,6 @@
 import ui  # TODO just for testing purposes, delete from final code
+import util
+import main
 
 
 def create_room(entry_door, exit_door, level, width=30, height=20):
@@ -41,6 +43,14 @@ def create_room(entry_door, exit_door, level, width=30, height=20):
     return board
 
 
+def create_board():
+    board = []
+    board.append(create_room(None, (4, 29), 1))
+    board.append(create_room((5, 0), (19, 26), 2))
+    board.append(create_room((0, 26), None, 3))
+    return board
+
+
 def create_doors(board: list, entry_door: tuple, exit_door: tuple) -> None:
     if entry_door:
         board[entry_door[0]][entry_door[1]] = 2
@@ -58,17 +68,22 @@ def place_inner_wall(board, start_wall, end_wall):
 
 
 def put_player_on_board(board, player):
-    '''
-    Modifies the game board by placing the player icon at its coordinates.
+    if board[0]:
+        board[player['X']][player['Y']]
 
-    Args:
-    list: The game board
-    dictionary: The player information containing the icon and coordinates
 
-    Returns:
-    Nothing
-    '''
-    pass
+def new_player_position(player_coordinates: tuple, direction: tuple) -> tuple:
+    player_coordinates = (player_coordinates[0] + direction[0], player_coordinates[1] + direction[1])
+    return player_coordinates
+
+
+def check_target_cell(player_coordinates: tuple, direction: tuple) -> bool:
+    potential_cell = new_player_position(player_coordinates, direction)
+    return board[potential_cell[0]][potential_cell[1]] == ' '
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -76,10 +91,10 @@ if __name__ == "__main__":
     room2 = create_room((5, 0), (19, 26), 2)
     room3 = create_room((0, 26), None, 3)
 
-    # color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
-    # ui.display_board(room1, color_scheme)
-    # ui.display_board(room2, color_scheme)
-    # ui.display_board(room3, color_scheme)
+    color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
+    ui.display_board(room1, color_scheme)
+    ui.display_board(room2, color_scheme)
+    ui.display_board(room3, color_scheme)
 
     for i in room1:
         print(" ".join(map(str, i)))
@@ -87,3 +102,4 @@ if __name__ == "__main__":
         print(" ".join(map(str, i)))
     for i in room3:
         print(" ".join(map(str, i)))
+
