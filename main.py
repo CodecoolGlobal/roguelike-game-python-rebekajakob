@@ -71,12 +71,10 @@ def main():
                 player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
                 current_room[player_coordinates[0]][player_coordinates[1]] = 4
 
-            # elif engine.check_target_cell(current_room, player_coordinates, direction) == 6: # player bumped into monster
-            #     player['HP'] -= 10
-            #     current_room[player_coordinates[0]][player_coordinates[1]] = 0
-            #     player_coordinates = engine.new_player_position(player_coordinates, direction)
-            #     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-            #     current_room[player_coordinates[0]][player_coordinates[1]] = 4
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == 6: # player bumped into monster
+                player['HP'] -= 10
+                
+
         util.clear_screen()
 
 
