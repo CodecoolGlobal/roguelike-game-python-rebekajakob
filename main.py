@@ -9,7 +9,7 @@ PLAYER_START_Y = 2
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
 
-color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X', 4: 'O'}
+color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X', 4: 'O', 5: '☆'}
 
 
 def create_player():
@@ -18,7 +18,7 @@ def create_player():
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0}
     return player
 
 
@@ -31,7 +31,7 @@ def main():
     while is_running:
         current_room = board[current_room_index]
         engine.put_player_on_board(current_room, player)
-        ui.display_board(current_room, color_scheme)
+        ui.display_board(current_room, color_scheme, player)
         player_coordinates = player['X'], player['Y']
 
         button = util.key_pressed()
@@ -63,6 +63,20 @@ def main():
                     player['X'], player['Y'] = 4 , 1
                 elif current_room_index == 2:
                     player['X'], player['Y'] = 1, 26
+
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == 5: # player bumped into coin
+                player['COINS'] += 1
+                current_room[player_coordinates[0]][player_coordinates[1]] = 0
+                player_coordinates = engine.new_player_position(player_coordinates, direction)
+                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+                current_room[player_coordinates[0]][player_coordinates[1]] = 4
+
+            # elif engine.check_target_cell(current_room, player_coordinates, direction) == 6: # player bumped into monster
+            #     player['HP'] -= 10
+            #     current_room[player_coordinates[0]][player_coordinates[1]] = 0
+            #     player_coordinates = engine.new_player_position(player_coordinates, direction)
+            #     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+            #     current_room[player_coordinates[0]][player_coordinates[1]] = 4
         util.clear_screen()
 
 

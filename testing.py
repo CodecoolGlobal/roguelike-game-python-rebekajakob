@@ -34,4 +34,5 @@ print_board()
 2 = entry door
 3 = exit door
 4 = player
+5 = coin
 """
