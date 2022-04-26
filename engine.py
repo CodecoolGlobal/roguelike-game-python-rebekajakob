@@ -16,12 +16,12 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         current_row = []
         for col in range(width):
             if row == 0 or row == height - 1:
-                current_row.append(1)
+                current_row.append(WALL_CELL)
             else:
                 if col == 0 or col == width - 1:
-                    current_row.append(1)
+                    current_row.append(WALL_CELL)
                 else:
-                    current_row.append(0)
+                    current_row.append(EMPTY_CELL)
         room.append(current_row)
     create_doors(room, entry_door, exit_door)
     if level == 0:
@@ -72,7 +72,7 @@ def create_board(width, heigth) -> list:
     (rooms need to be added manually)
     """
     entry_exit_door_positions = [(None, (4, 29)), ((4, 0), (19, 26)), ((0, 26), None)]
-    return [create_room(room[0], room[1], i, width, heigth) for i, room in enumerate(entry_exit_door_positions)]
+    return [create_room(doors[0], doors[1], i, width, heigth) for i, doors in enumerate(entry_exit_door_positions)]
 
 
 def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
@@ -111,21 +111,13 @@ def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tupl
 
 
 def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -> int:
-    """checks if the move to the given direction is valid
-    returns:
-    0 = valid move to empty cell
-    1 = entry door
-    2 = exit door
-    3 = player
-    4 = coin
-    5 = monster
-    6 = dead player
+    """Returns what is in the the target cell
     """
     potential_cell = new_player_position(player_coordinates, direction)
     return room[potential_cell[0]][potential_cell[1]]
 
 
-def check_hp(player: dict) -> None:
+def check_player_is_dead(player: dict) -> None:
     return player['HP'] <= 0
 
 

@@ -18,7 +18,7 @@ MONSTER = 6
 DEAD_PLAYER = 7
 
 
-def create_player():
+def create_player() -> dict:
     """Sets the player's attributes
     'X'=starter position
     'Y'=starter position
@@ -28,7 +28,7 @@ def create_player():
     return player
 
 
-def main():
+def main() -> None:
     color_scheme = {
         EMPTY_CELL: '  ',
         WALL_CELL: '🌵',
@@ -37,7 +37,8 @@ def main():
         PLAYER: '🤠',
         COIN: '🌮',
         MONSTER: '👾',
-        DEAD_PLAYER: '💀'}
+        DEAD_PLAYER: '💀'
+        }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     util.clear_screen()
@@ -91,7 +92,7 @@ def main():
                 player['HP'] -= 10
                 # monster['HP'] -= 10
 
-            if engine.check_hp(player):
+            if engine.check_player_is_dead(player):
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
                 is_running = False
                 util.clear_screen()
