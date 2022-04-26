@@ -74,6 +74,15 @@ def main():
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == 6: # player bumped into monster
                 player['HP'] -= 10
+                
+            if engine.check_hp(player):
+                current_room[player_coordinates[0]][player_coordinates[1]] = 7
+                is_running = False
+                util.clear_screen()
+                ui.display_board(current_room, player)
+                print("GAME OVER! You are dead!")
+                print()
+                break
 
 
         util.clear_screen()

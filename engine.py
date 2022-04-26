@@ -135,6 +135,9 @@ def check_target_cell(room, player_coordinates: tuple, direction: tuple):
         return 7
 
 
+def check_hp(player):
+    return player['HP'] <= 0
+
 
 
 if __name__ == "__main__":
