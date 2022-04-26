@@ -2,7 +2,7 @@ import util
 import engine
 import ui
 
-PLAYER_ICON = '@'
+# PLAYER_ICON = '@'
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
 
@@ -10,7 +10,7 @@ BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
 
 # color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X', 4: 'O', 5: '☆'}
-color_scheme = {0: '  ', 1: '🌵', 2: '🚪', 3: '🚪', 4: '🤠', 5: '🌮', 6: '👾', 7: '💀'}
+# color_scheme = {0: '  ', 1: '🌵', 2: '🚪', 3: '🚪', 4: '🤠', 5: '🌮', 6: '👾', 7: '💀'}
 
 
 def create_player():
@@ -32,7 +32,7 @@ def main():
     while is_running:
         current_room = board[current_room_index]
         engine.put_player_on_board(current_room, player)
-        ui.display_board(current_room, color_scheme, player)
+        ui.display_board(current_room, player)
         player_coordinates = player['X'], player['Y']
 
         button = util.key_pressed()
