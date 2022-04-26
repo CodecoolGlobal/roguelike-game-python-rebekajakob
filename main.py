@@ -33,11 +33,12 @@ def main():
         if button in direction_vectors:
             direction = direction_vectors[button]
             if engine.check_target_cell(current_room, player_coordinates, direction):
-                current_room[player_coordinates[0]][player_coordinates[1]] = ' '
-                player_coordinates = engine.new_player_position(current_room, player_coordinates, direction)
-                current_room[player_coordinates[0]][player_coordinates[1]] = '@'
+                current_room[player_coordinates[0]][player_coordinates[1]] = 0
+                player_coordinates = engine.new_player_position(player_coordinates, direction)
+                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+                current_room[player_coordinates[0]][player_coordinates[1]] = 4
         util.clear_screen()
-        ui.display_board(current_room, color_scheme)
+        # ui.display_board(current_room, color_scheme)
 
 
 

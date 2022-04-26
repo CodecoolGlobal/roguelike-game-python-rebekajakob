@@ -71,14 +71,14 @@ def put_player_on_board(room, player):
     room[player['X']][player['Y']] = 4
 
 
-def new_player_position(player_coordinates: tuple, direction: tuple) -> tuple:
-    player_coordinates = (player_coordinates[0] + direction[0], player_coordinates[1] + direction[1])
-    return player_coordinates
+def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tuple:
+    new_player_coordinates = (old_player_coordinates[0] + direction[0], old_player_coordinates[1] + direction[1])
+    return new_player_coordinates
 
 
-def check_target_cell(board, player_coordinates: tuple, direction: tuple) -> bool:
+def check_target_cell(room, player_coordinates: tuple, direction: tuple) -> bool:
     potential_cell = new_player_position(player_coordinates, direction)
-    return board[potential_cell[0]][potential_cell[1]] == ' '
+    return room[potential_cell[0]][potential_cell[1]] == 0
 
 
 
