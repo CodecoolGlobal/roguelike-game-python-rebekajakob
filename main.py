@@ -35,6 +35,8 @@ def main():
         player_coordinates = player['X'], player['Y']
 
         button = util.key_pressed()
+        if button == 'q':
+            exit()
         direction_vectors = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
         if button in direction_vectors:
             direction = direction_vectors[button]
