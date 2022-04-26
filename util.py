@@ -28,7 +28,4 @@ def key_pressed():
 
 
 def clear_screen():
-    if os.name == "nt":
-        os.system('cls')
-    else:
-        os.system('clear')
+    os.system('cls') if os.name == "nt" else os.system('clear')
