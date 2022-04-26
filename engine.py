@@ -32,6 +32,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
         place_inner_wall(room, (11, 19), (11, 25))
         place_coin(room, (4, 3))
         place_coin(room, (9, 22))
+        place_monster(room, (5, 7))
+        place_monster(room, (4, 27))
+        place_monster(room, (17, 25))
     if level == 2:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -43,12 +46,17 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
         place_coin(room, (2, 27))
         place_coin(room, (3, 19))
         place_coin(room, (1, 17))
+
     if level == 3:
         place_inner_wall(room, (5, 10), (5, 10))
         place_inner_wall(room, (15, 11), (15, 11))
         place_inner_wall(room, (4, 20), (4, 20))
         place_inner_wall(room, (10, 20), (10, 20))
     return room
+
+
+def place_monster(room, coordinate: tuple):
+    room[coordinate[0]][coordinate[1]] = 6
 
 
 def place_coin(room, coordinate: tuple):
@@ -110,6 +118,7 @@ def check_target_cell(room, player_coordinates: tuple, direction: tuple):
     4 = player
     5 = coin
     6 = monster
+    7 = dead monster
     """
     potential_cell = new_player_position(player_coordinates, direction)
     if room[potential_cell[0]][potential_cell[1]] == 0:
@@ -122,6 +131,8 @@ def check_target_cell(room, player_coordinates: tuple, direction: tuple):
         return 5
     elif room[potential_cell[0]][potential_cell[1]] == 6:
         return 6
+    elif room[potential_cell[0]][potential_cell[1]] == 7:
+        return 7
 
 
 
