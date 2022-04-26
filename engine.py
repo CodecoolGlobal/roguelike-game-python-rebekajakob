@@ -1,4 +1,13 @@
-def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, height=20) -> list:
+EMPTY_CELL = 0
+WALL_CELL = 1
+ENTRY_DOOR = 2
+EXIT_DOOR = 3
+PLAYER = 4
+COIN = 5
+MONSTER = 6
+
+
+def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
     (hard coded rooms)
     """
@@ -15,7 +24,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
                     current_row.append(0)
         room.append(current_row)
     create_doors(room, entry_door, exit_door)
-    if level == 1:
+    if level == 0:
         place_inner_wall(room, (10, 0), (10, 10))
         place_inner_wall(room, (5, 15), (13, 15))
         place_inner_wall(room, (15, 5), (19, 5))
@@ -30,7 +39,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
         place_monster(room, (5, 7))
         place_monster(room, (4, 27))
         place_monster(room, (17, 25))
-    if level == 2:
+    if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
         place_inner_wall(room, (10, 15), (19, 15))
@@ -42,7 +51,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
         place_coin(room, (3, 19))
         place_coin(room, (1, 17))
 
-    if level == 3:
+    if level == 2:
         place_inner_wall(room, (5, 10), (5, 10))
         place_inner_wall(room, (15, 11), (15, 11))
         place_inner_wall(room, (4, 20), (4, 20))
@@ -51,22 +60,19 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width=30, heigh
 
 
 def place_monster(room: list, coordinate: tuple) -> None:
-    room[coordinate[0]][coordinate[1]] = 6
+    room[coordinate[0]][coordinate[1]] = MONSTER
 
 
 def place_coin(room: int, coordinate: tuple) -> None:
-    room[coordinate[0]][coordinate[1]] = 5
+    room[coordinate[0]][coordinate[1]] = COIN
 
 
-def create_board() -> list:
+def create_board(width, heigth) -> list:
     """Puts the rooms together into one board list
     (rooms need to be added manually)
     """
-    board = []
-    board.append(create_room(None, (4, 29), 1))
-    board.append(create_room((4, 0), (19, 26), 2))
-    board.append(create_room((0, 26), None, 3))
-    return board
+    entry_exit_door_positions = [(None, (4, 29)), ((4, 0), (19, 26)), ((0, 26), None)]
+    return [create_room(room[0], room[1], i, width, heigth) for i, room in enumerate(entry_exit_door_positions)]
 
 
 def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
@@ -74,9 +80,9 @@ def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
     write None to not add the door
     """
     if entry_door:
-        room[entry_door[0]][entry_door[1]] = 2
+        room[entry_door[0]][entry_door[1]] = ENTRY_DOOR
     if exit_door:
-        room[exit_door[0]][exit_door[1]] = 3
+        room[exit_door[0]][exit_door[1]] = EXIT_DOOR
 
 
 def place_inner_wall(board: list, start_wall: tuple, end_wall: tuple) -> None:
@@ -84,17 +90,17 @@ def place_inner_wall(board: list, start_wall: tuple, end_wall: tuple) -> None:
     """
     if start_wall[0] == end_wall[0]:
         for i in range(start_wall[1], end_wall[1]+1):
-            board[start_wall[0]][i] = 1
+            board[start_wall[0]][i] = WALL_CELL
     else:
         for i in range(start_wall[0], end_wall[0]+1):
-            board[i][start_wall[1]] = 1
+            board[i][start_wall[1]] = WALL_CELL
 
 
 def put_player_on_board(room: list, player: dict) -> None:
     """puts player on given room,
     needs the player stats
     """
-    room[player['X']][player['Y']] = 4
+    room[player['X']][player['Y']] = PLAYER
 
 
 def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tuple:
@@ -116,20 +122,7 @@ def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -
     6 = dead player
     """
     potential_cell = new_player_position(player_coordinates, direction)
-    if room[potential_cell[0]][potential_cell[1]] == 0:
-        return 0
-    elif room[potential_cell[0]][potential_cell[1]] == 1:
-        return 1
-    elif room[potential_cell[0]][potential_cell[1]] == 2:
-        return 2
-    elif room[potential_cell[0]][potential_cell[1]] == 3:
-        return 3
-    elif room[potential_cell[0]][potential_cell[1]] == 4:
-        return 4
-    elif room[potential_cell[0]][potential_cell[1]] == 5:
-        return 5
-    elif room[potential_cell[0]][potential_cell[1]] == 6:
-        return 6
+    return room[potential_cell[0]][potential_cell[1]]
 
 
 def check_hp(player: dict) -> None:
@@ -137,19 +130,4 @@ def check_hp(player: dict) -> None:
 
 
 if __name__ == "__main__":
-    # room1 = create_room(None, (4, 29), 1)
-    # room2 = create_room((5, 0), (19, 26), 2)
-    # room3 = create_room((0, 26), None, 3)
-
-    # color_scheme = {0: ' ', 1: '▅', 2: 'E', 3: 'X'}
-    # ui.display_board(room1, color_scheme)
-    # ui.display_board(room2, color_scheme)
-    # ui.display_board(room3, color_scheme)
-
-    # for i in room1:
-    #     print(" ".join(map(str, i)))
-    # for i in room2:
-    #     print(" ".join(map(str, i)))
-    # for i in room3:
-    #     print(" ".join(map(str, i)))
     pass

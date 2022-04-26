@@ -1,10 +1,11 @@
 # coloring
 import colorama
+import util
 
 a = colorama.Fore.CYAN + "Q" + colorama.Style.RESET_ALL
 print({a})
 
-import util
+
 def get_keypress():
     key = ""
     while key != 'q':
@@ -12,6 +13,7 @@ def get_keypress():
         print(key)
         print({key})
 # get_keypress()
+
 
 # board size
 def print_board(width=30, height=20):
@@ -23,8 +25,9 @@ def print_board(width=30, height=20):
         board.append(row)
     for row in board:
         print(' '.join(row))
-print_board()
 
+
+print_board()
 
 # teli karakter: █
 

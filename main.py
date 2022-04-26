@@ -15,6 +15,7 @@ EXIT_DOOR = 3
 PLAYER = 4
 COIN = 5
 MONSTER = 6
+DEAD_PLAYER = 7
 
 
 def create_player():
@@ -28,15 +29,24 @@ def create_player():
 
 
 def main():
+    color_scheme = {
+        EMPTY_CELL: '  ',
+        WALL_CELL: '🌵',
+        ENTRY_DOOR: '🚪',
+        EXIT_DOOR: '🚪',
+        PLAYER: '🤠',
+        COIN: '🌮',
+        MONSTER: '👾',
+        DEAD_PLAYER: '💀'}
     player = create_player()
-    board = engine.create_board()
+    board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     util.clear_screen()
     is_running = True
     current_room_index = 0
     while is_running:
         current_room = board[current_room_index]
         engine.put_player_on_board(current_room, player)
-        ui.display_board(current_room, player)
+        ui.display_board(current_room, player, color_scheme)
         player_coordinates = player['X'], player['Y']
 
         button = util.key_pressed()
@@ -50,10 +60,10 @@ def main():
                 current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
                 player_coordinates = engine.new_player_position(player_coordinates, direction)
                 player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                current_room[player_coordinates[0]][player_coordinates[1]] = 4
-  
+                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == ENTRY_DOOR:
-                current_room[player_coordinates[0]][player_coordinates[1]] = 0
+                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
                 current_room_index -= 1
                 current_room = board[current_room_index]
                 if current_room_index == 0:
@@ -62,8 +72,8 @@ def main():
                     player['X'], player['Y'] = 18, 26
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == EXIT_DOOR:
-                current_room[player_coordinates[0]][player_coordinates[1]] = 0
-                current_room_index += 1    
+                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
+                current_room_index += 1
                 current_room = board[current_room_index]
                 if current_room_index == 1:
                     player['X'], player['Y'] = 4, 1
@@ -72,20 +82,20 @@ def main():
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
                 player['COINS'] += 1
-                current_room[player_coordinates[0]][player_coordinates[1]] = 0
+                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
                 player_coordinates = engine.new_player_position(player_coordinates, direction)
                 player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                current_room[player_coordinates[0]][player_coordinates[1]] = 4
+                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
                 player['HP'] -= 10
                 # monster['HP'] -= 10
 
             if engine.check_hp(player):
-                current_room[player_coordinates[0]][player_coordinates[1]] = 7
+                current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
                 is_running = False
                 util.clear_screen()
-                ui.display_board(current_room, player)
+                ui.display_board(current_room, player, color_scheme)
                 print("GAME OVER! You are dead!")
                 print()
                 break
