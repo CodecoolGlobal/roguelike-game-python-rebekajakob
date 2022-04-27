@@ -102,10 +102,10 @@ def main() -> None:
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
                 player['HP'] -= 10
-                for monster in engine.MONSTERS:
+                for monster in engine.MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                         monster['HP'] -= 10
-                        engine.MONSTERS.remove(monster)
+                        engine.MONSTERS[current_room_index].remove(monster)
                         if engine.check_creature_is_dead(monster):
                             chance = [EMPTY_CELL, EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
