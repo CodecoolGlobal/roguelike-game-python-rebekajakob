@@ -21,6 +21,8 @@ DEAD_PLAYER = 7
 TACO = 8
 NPC = 9
 BOSS = 10
+BASIC_WEAPON = 11
+ADVANCED_WEAPON = 12
 
 
 def create_player() -> dict:
@@ -29,7 +31,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 10}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY':[]}
     return player
 
 
@@ -46,7 +48,10 @@ def main() -> None:
         MONSTER: '👾',
         DEAD_PLAYER: '💀',
         NPC: '🎅',
-        BOSS: '👹'
+        BOSS: '👹',
+        BASIC_WEAPON: '🏹',
+        ADVANCED_WEAPON: '🔪'
+
         }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
@@ -54,6 +59,10 @@ def main() -> None:
     is_running = True
     current_room_index = 0
     while is_running:
+        if 'BASIC WEAPON' in player['INVENTORY']:
+            player['ATTACK'] = 10
+        elif 'ADVANCED WEAPON' in player['INVENTORY']:
+            player['ATTACK'] = 20
         current_room = board[current_room_index]
         engine.put_player_on_board(current_room, player)
         ui.display_board(current_room, player, color_scheme)
@@ -128,8 +137,16 @@ def main() -> None:
                         monster['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(monster):
                             engine.MONSTERS[current_room_index].remove(monster)
-                            chance = [EMPTY_CELL, EMPTY_CELL, COIN]
+                            chance = [EMPTY_CELL, EMPTY_CELL, COIN,BASIC_WEAPON]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
+
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
+                if 'BASIC WEAPON'not in player['INVENTORY']: 
+                    player['INVENTORY'].append('BASIC WEAPON')
+                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
+                player_coordinates = engine.new_player_position(player_coordinates, direction)
+                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
             
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
                 player['HP'] -= 15

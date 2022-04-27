@@ -12,6 +12,8 @@ TACO = 8
 NPC = 9
 BOSS = 10
 BOSSES = []
+BASIC_WEAPON = 11
+ADVANCED_WEAPON = 12
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -40,8 +42,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (9, 19), (9, 25))
         place_inner_wall(room, (10, 19), (10, 25))
         place_inner_wall(room, (11, 19), (11, 25))
-        place_coin(room, (4, 3))
-        place_coin(room, (9, 22))
+        place_object(room, (4, 3),TACO)
+        place_object(room, (9, 22),TACO)
+        place_object(room, (5, 5), BASIC_WEAPON)
         current_room_monsters = []
         monster0 = place_monster(room, (5, 7))
         current_room_monsters.append(monster0)
@@ -58,10 +61,10 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (7, 21), (7, 25))
         place_inner_wall(room, (12, 21), (12, 29))
         place_inner_wall(room, (0, 25), (7, 25))
-        place_coin(room, (2, 27))
-        place_coin(room, (3, 19))
-        place_coin(room, (1, 17))
-        place_npc(room, (16, 16))
+        place_object(room, (2, 27),TACO)
+        place_object(room, (3, 19),TACO)
+        place_object(room, (1, 17),TACO)
+        place_object(room, (16, 16),NPC)
         current_room_monsters = []
         monster0 = place_monster(room, (3, 8))
         current_room_monsters.append(monster0)
@@ -133,12 +136,8 @@ def monster_movement(monster, new_directions):
     return new_position_monster
 
 
-def place_coin(room: int, coordinate: tuple) -> None:
-    room[coordinate[0]][coordinate[1]] = TACO
-
-
-def place_npc(room: int, coordinate: tuple) -> None:
-    room[coordinate[0]][coordinate[1]] = NPC
+def place_object(room: int, coordinate: tuple, item: int) -> None:
+    room[coordinate[0]][coordinate[1]] = item
 
 
 def create_board(width, heigth) -> list:
