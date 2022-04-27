@@ -45,14 +45,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (4, 3), TACO)
         place_object(room, (9, 22), TACO)
         place_object(room, (5, 5), BASIC_WEAPON)
-        current_room_monsters = []
-        monster0 = place_monster(room, (5, 7))
-        current_room_monsters.append(monster0)
-        monster1 = place_monster(room, (4, 27))
-        current_room_monsters.append(monster1)
-        monster2 = place_monster(room, (17, 25))
-        current_room_monsters.append(monster2)
-        MONSTERS.append(current_room_monsters)
+        monster_positions = [(5, 7), (4, 27), (17, 25)]
+        MONSTERS.append([place_monster(room, monster_position) for monster_position in monster_positions])
+
     if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -65,18 +60,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (3, 19), TACO)
         place_object(room, (1, 17), TACO)
         place_object(room, (16, 16), NPC)
-        current_room_monsters = []
-        monster0 = place_monster(room, (3, 8))
-        current_room_monsters.append(monster0)
-        monster1 = place_monster(room, (8, 5))
-        current_room_monsters.append(monster1)
-        monster2 = place_monster(room, (15, 13))
-        current_room_monsters.append(monster2)
-        monster3 = place_monster(room, (18, 9))
-        current_room_monsters.append(monster3)
-        monster4 = place_monster(room, (3, 27))
-        current_room_monsters.append(monster4)
-        MONSTERS.append(current_room_monsters)
+        monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
+        MONSTERS.append([place_monster(room, monster_position) for monster_position in monster_positions])
 
     if level == 2:
         place_inner_wall(room, (5, 10), (5, 10))
@@ -85,16 +70,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (10, 20), (10, 20))
         current_room_monsters = []
         MONSTERS.append(current_room_monsters)
-        boss1 = place_boss(room, (10, 10))
-        boss2 = place_boss(room, (11, 10))
-        boss3 = place_boss(room, (12, 10))
-        boss4 = place_boss(room, (10, 11))
-        boss5 = place_boss(room, (10, 12))
-        boss6 = place_boss(room, (12, 12))
-        boss7 = place_boss(room, (12, 11))
-        boss8 = place_boss(room, (11, 12))
-        boss9 = place_boss(room, (11, 11))
-        BOSSES.append([boss1, boss2, boss3, boss4, boss5, boss6, boss7, boss8, boss9])
+        boss_positions = [(10, 10), (10, 11), (10, 12), (11, 10), (11, 11), (11, 12), (12, 10), (12, 11), (12, 12)]
+        BOSSES.append([place_boss(room, boss_position) for boss_position in boss_positions])
 
     return room
 
@@ -143,7 +120,7 @@ def create_board(width, heigth) -> list:
     return [create_room(doors[0], doors[1], i, width, heigth) for i, doors in enumerate(entry_exit_door_positions)]
 
 
-def creature_position(creature_coordinates: tuple, new_directions: tuple) -> tuple:
+def new_creature_position(creature_coordinates: tuple, new_directions: tuple) -> tuple:
     new_position = creature_coordinates[0] + new_directions[0], creature_coordinates[1] + new_directions[1]
     return new_position
 
@@ -178,7 +155,7 @@ def put_player_on_board(room: list, player: dict) -> None:
 
 def player_step_there(player: dict, current_room: list, player_coordinates: tuple, direction: tuple) -> tuple:
     current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-    player_coordinates = creature_position(player_coordinates, direction)
+    player_coordinates = new_creature_position(player_coordinates, direction)
     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
     current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
     return player_coordinates
@@ -187,7 +164,7 @@ def player_step_there(player: dict, current_room: list, player_coordinates: tupl
 def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -> int:
     """Returns what is in the the target cell
     """
-    potential_cell = creature_position(player_coordinates, direction)
+    potential_cell = new_creature_position(player_coordinates, direction)
     return room[potential_cell[0]][potential_cell[1]]
 
 

@@ -32,7 +32,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 1000, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
     return player
 
 
@@ -72,7 +72,7 @@ def main() -> None:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
                 current_room[monster['X']][monster['Y']] = EMPTY_CELL
-                monster_coordinates = engine.creature_position((monster['X'], monster['Y']), new_directions)
+                monster_coordinates = engine.new_creature_position((monster['X'], monster['Y']), new_directions)
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
 
@@ -86,7 +86,7 @@ def main() -> None:
                 for boss in engine.BOSSES[0]:
                     current_room[boss['X']][boss['Y']] = EMPTY_CELL
                 for boss in engine.BOSSES[0]:
-                    boss_coordinates = engine.creature_position((boss['X'], boss['Y']), new_directions)
+                    boss_coordinates = engine.new_creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
 
@@ -147,6 +147,8 @@ def main() -> None:
                             chance = [EMPTY_CELL]
                             current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                         if len(engine.BOSSES[0]) == 0:
+                            util.clear_screen()
+                            ui.display_board(current_room, player, color_scheme)
                             print("YOU WON THE GAME!!")
                             exit()
 
@@ -160,7 +162,7 @@ def main() -> None:
                         while True:
                             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
                             if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
-                                potion_coordinates = engine.creature_position((16, 16), new_directions)
+                                potion_coordinates = engine.new_creature_position((16, 16), new_directions)
                                 current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
                                 player['COINS'] -= 1
                                 break
