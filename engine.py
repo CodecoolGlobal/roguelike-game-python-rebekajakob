@@ -10,6 +10,8 @@ MONSTER = 6
 MONSTERS = []
 TACO = 8
 NPC = 9
+BOSS = 10
+BOSSES = []
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -80,6 +82,16 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (10, 20), (10, 20))
         current_room_monsters = []
         MONSTERS.append(current_room_monsters)
+        boss1 = place_boss(room, (10, 10))
+        boss2 = place_boss(room, (11, 10))
+        boss3 = place_boss(room, (12, 10))
+        boss4 = place_boss(room, (10, 11))
+        boss5 = place_boss(room, (10, 12))
+        boss6 = place_boss(room, (12, 12))
+        boss7 = place_boss(room, (12, 11))
+        boss8 = place_boss(room, (11, 12))
+        boss9 = place_boss(room, (11, 11))
+        BOSSES.append([boss1, boss2, boss3, boss4, boss5, boss6, boss7, boss8, boss9])
 
     return room
 
@@ -100,7 +112,23 @@ def place_monster(room: list, coordinate: tuple) -> None:
     return monster
 
 
-def monster_movement(monster,new_directions):
+def create_boss() -> dict:
+    """Sets the bosses attributes
+    'HP'= hitpoint
+    """
+    boss = {'X': 0, 'Y': 0, 'HP': 20}
+    return boss
+
+
+def place_boss(room: list, coordinate: tuple) -> None:
+    boss = create_boss()
+    room[coordinate[0]][coordinate[1]] = BOSS
+    boss['X'] = coordinate[0]
+    boss['Y'] = coordinate[1]
+    return boss
+
+
+def monster_movement(monster, new_directions):
     new_position_monster = (monster[0] + new_directions[0], monster[1] + new_directions[1])
     return new_position_monster
 
