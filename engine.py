@@ -39,12 +39,14 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (11, 19), (11, 25))
         place_coin(room, (4, 3))
         place_coin(room, (9, 22))
+        current_room_monsters = []
         monster0= place_monster(room, (5, 7))
-        MONSTERS.append(monster0)
+        current_room_monsters.append(monster0)
         monster1= place_monster(room, (4, 27))
-        MONSTERS.append(monster1)
+        current_room_monsters.append(monster1)
         monster2= place_monster(room, (17, 25))
-        MONSTERS.append(monster2)
+        current_room_monsters.append(monster2)
+        MONSTERS.append(current_room_monsters)
     if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -56,12 +58,17 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_coin(room, (2, 27))
         place_coin(room, (3, 19))
         place_coin(room, (1, 17))
+        current_room_monsters = []
+        MONSTERS.append(current_room_monsters)
 
     if level == 2:
         place_inner_wall(room, (5, 10), (5, 10))
         place_inner_wall(room, (15, 11), (15, 11))
         place_inner_wall(room, (4, 20), (4, 20))
         place_inner_wall(room, (10, 20), (10, 20))
+        current_room_monsters = []
+        MONSTERS.append(current_room_monsters)
+
     return room
 
 

@@ -54,12 +54,11 @@ def main() -> None:
         ui.display_board(current_room, player, color_scheme)
         player_coordinates = player['X'], player['Y']
 
-        direction_vectors = [(-1, 0),(1, 0),(0, -1),(0, 1)]
-        for monster in engine.MONSTERS:
-            new_directions = random.choice(direction_vectors)
-            if engine.check_target_cell(current_room,(monster['X'],monster['Y']),new_directions) == 0:
+        for monster in engine.MONSTERS[current_room_index]:
+            new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
+            if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
                 current_room[monster['X']][monster['Y']] = EMPTY_CELL
-                monster_coordinates = engine.monster_movement((monster['X'],monster['Y']),new_directions)
+                monster_coordinates = engine.monster_movement((monster['X'], monster['Y']), new_directions)
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
 
