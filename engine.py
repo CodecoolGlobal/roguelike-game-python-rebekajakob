@@ -68,8 +68,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (15, 11), (15, 11))
         place_inner_wall(room, (4, 20), (4, 20))
         place_inner_wall(room, (10, 20), (10, 20))
-        current_room_monsters = []
-        MONSTERS.append(current_room_monsters)
+        monster_positions = []
+        MONSTERS.append([place_monster(room, monster_position) for monster_position in monster_positions])
         boss_positions = [(10, 10), (10, 11), (10, 12), (11, 10), (11, 11), (11, 12), (12, 10), (12, 11), (12, 12)]
         BOSSES.append([place_boss(room, boss_position) for boss_position in boss_positions])
 

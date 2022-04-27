@@ -32,7 +32,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 1000, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
     return player
 
 
