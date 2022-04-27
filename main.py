@@ -20,6 +20,7 @@ MONSTER = 6
 DEAD_PLAYER = 7
 TACO = 8
 NPC = 9
+BOSS = 10
 
 
 def create_player() -> dict:
@@ -28,7 +29,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 10}
     return player
 
 
@@ -44,7 +45,8 @@ def main() -> None:
         COIN: '💰',
         MONSTER: '👾',
         DEAD_PLAYER: '💀',
-        NPC: '🎅'
+        NPC: '🎅',
+        BOSS: '👹'
         }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
@@ -107,11 +109,24 @@ def main() -> None:
                 player['HP'] -= 10
                 for monster in engine.MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
-                        monster['HP'] -= 10
-                        engine.MONSTERS[current_room_index].remove(monster)
+                        monster['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(monster):
+                            engine.MONSTERS[current_room_index].remove(monster)
                             chance = [EMPTY_CELL, EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
+            
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
+                player['HP'] -= 15
+                for boss_part in engine.BOSSES[0]:
+                    if boss_part['X'] == player_coordinates[0] + direction[0] and boss_part['Y'] == player_coordinates[1] + direction[1]:
+                        boss_part['HP'] -= player['ATTACK']
+                        if engine.check_creature_is_dead(boss_part):
+                            engine.BOSSES[0].remove(boss_part)
+                            chance = [EMPTY_CELL, EMPTY_CELL, COIN]
+                            current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
+                        if len(engine.BOSSES[0]) == 0:
+                            print("YOU WON THE GAME!!")
+                            exit()
             
             elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
                 print("Hello, player!")
