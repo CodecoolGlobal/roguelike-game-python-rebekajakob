@@ -1,6 +1,7 @@
 import util
 import engine
 import ui
+import time
 import random
 
 PLAYER_START_X = 17
@@ -18,6 +19,7 @@ COIN = 5
 MONSTER = 6
 DEAD_PLAYER = 7
 TACO = 8
+NPC = 9
 
 
 def create_player() -> dict:
@@ -41,7 +43,8 @@ def main() -> None:
         TACO: '🌮',
         COIN: '💰',
         MONSTER: '👾',
-        DEAD_PLAYER: '💀'
+        DEAD_PLAYER: '💀',
+        NPC: '🎅'
         }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
@@ -109,6 +112,10 @@ def main() -> None:
                         if engine.check_creature_is_dead(monster):
                             chance = [EMPTY_CELL, EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
+            
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
+                print("Hello, player!")
+                time.sleep(2)
             
             elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
                 if player['HP'] < 100:

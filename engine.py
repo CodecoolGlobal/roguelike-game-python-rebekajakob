@@ -9,6 +9,7 @@ COIN = 5
 MONSTER = 6
 MONSTERS = []
 TACO = 8
+NPC = 9
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -58,6 +59,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_coin(room, (2, 27))
         place_coin(room, (3, 19))
         place_coin(room, (1, 17))
+        place_npc(room, (16, 16))
         current_room_monsters = []
         MONSTERS.append(current_room_monsters)
 
@@ -95,6 +97,10 @@ def monster_movement(monster,new_directions):
 
 def place_coin(room: int, coordinate: tuple) -> None:
     room[coordinate[0]][coordinate[1]] = TACO
+
+
+def place_npc(room: int, coordinate: tuple) -> None:
+    room[coordinate[0]][coordinate[1]] = NPC
 
 
 def create_board(width, heigth) -> list:
