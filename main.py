@@ -28,6 +28,7 @@ def create_player() -> dict:
     return player
 
 
+
 def main() -> None:
     color_scheme = {
         EMPTY_CELL: '  ',
@@ -90,9 +91,13 @@ def main() -> None:
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
                 player['HP'] -= 10
-                # monster['HP'] -= 10
+                for monster in engine.MONSTERS:
+                    if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
+                        monster['HP'] -= 10
+                        if engine.check_creature_is_dead(monster):
+                            current_room[monster['X']][monster['Y']] = EMPTY_CELL
 
-            if engine.check_player_is_dead(player):
+            if engine.check_creature_is_dead(player):
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
                 is_running = False
                 util.clear_screen()
@@ -100,6 +105,7 @@ def main() -> None:
                 print("GAME OVER! You are dead!")
                 print()
                 break
+
         util.clear_screen()
 
 

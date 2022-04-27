@@ -5,7 +5,7 @@ EXIT_DOOR = 3
 PLAYER = 4
 COIN = 5
 MONSTER = 6
-
+MONSTERS = []
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -36,9 +36,12 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (11, 19), (11, 25))
         place_coin(room, (4, 3))
         place_coin(room, (9, 22))
-        place_monster(room, (5, 7))
-        place_monster(room, (4, 27))
-        place_monster(room, (17, 25))
+        monster0= place_monster(room, (5, 7))
+        MONSTERS.append(monster0)
+        monster1= place_monster(room, (4, 27))
+        MONSTERS.append(monster1)
+        monster2= place_monster(room, (17, 25))
+        MONSTERS.append(monster2)
     if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -59,8 +62,20 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
     return room
 
 
+def create_monster() -> dict:
+    """Sets the monster's attributes
+    'HP'= hitpoint
+    """
+    monster = {'X': 0, 'Y': 0, 'HP': 10}
+    return monster
+
+
 def place_monster(room: list, coordinate: tuple) -> None:
+    monster = create_monster()
     room[coordinate[0]][coordinate[1]] = MONSTER
+    monster['X'] = coordinate[0]
+    monster['Y'] = coordinate[1]
+    return monster
 
 
 def place_coin(room: int, coordinate: tuple) -> None:
@@ -117,8 +132,9 @@ def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -
     return room[potential_cell[0]][potential_cell[1]]
 
 
-def check_player_is_dead(player: dict) -> None:
+def check_creature_is_dead(player: dict) -> None:
     return player['HP'] <= 0
+
 
 
 if __name__ == "__main__":
