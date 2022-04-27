@@ -14,6 +14,7 @@ BOSS = 10
 BOSSES = []
 BASIC_WEAPON = 11
 ADVANCED_WEAPON = 12
+POTION = 13
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
