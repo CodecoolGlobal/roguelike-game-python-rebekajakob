@@ -1,3 +1,5 @@
+import random
+
 EMPTY_CELL = 0
 WALL_CELL = 1
 ENTRY_DOOR = 2
@@ -77,6 +79,11 @@ def place_monster(room: list, coordinate: tuple) -> None:
     monster['X'] = coordinate[0]
     monster['Y'] = coordinate[1]
     return monster
+
+
+def monster_movement(monster,new_directions):
+    new_position_monster = (monster[0] + new_directions[0], monster[1] + new_directions[1])
+    return new_position_monster
 
 
 def place_coin(room: int, coordinate: tuple) -> None:

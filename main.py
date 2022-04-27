@@ -54,6 +54,15 @@ def main() -> None:
         ui.display_board(current_room, player, color_scheme)
         player_coordinates = player['X'], player['Y']
 
+        direction_vectors = [(-1, 0),(1, 0),(0, -1),(0, 1)]
+        for monster in engine.MONSTERS:
+            new_directions = random.choice(direction_vectors)
+            if engine.check_target_cell(current_room,(monster['X'],monster['Y']),new_directions) == 0:
+                current_room[monster['X']][monster['Y']] = EMPTY_CELL
+                monster_coordinates = engine.monster_movement((monster['X'],monster['Y']),new_directions)
+                monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
+                current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
+
         button = util.key_pressed()
         if button == 'q':
             print("Goodbye!")
@@ -97,6 +106,7 @@ def main() -> None:
                 for monster in engine.MONSTERS:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                         monster['HP'] -= 10
+                        engine.MONSTERS.remove(monster)
                         if engine.check_creature_is_dead(monster):
                             chance = [EMPTY_CELL, EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
