@@ -6,6 +6,7 @@ PLAYER = 4
 COIN = 5
 MONSTER = 6
 MONSTERS = []
+TACO = 8
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -79,7 +80,7 @@ def place_monster(room: list, coordinate: tuple) -> None:
 
 
 def place_coin(room: int, coordinate: tuple) -> None:
-    room[coordinate[0]][coordinate[1]] = COIN
+    room[coordinate[0]][coordinate[1]] = TACO
 
 
 def create_board(width, heigth) -> list:

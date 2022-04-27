@@ -1,6 +1,7 @@
 import util
 import engine
 import ui
+import random
 
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
@@ -16,6 +17,7 @@ PLAYER = 4
 COIN = 5
 MONSTER = 6
 DEAD_PLAYER = 7
+TACO = 8
 
 
 def create_player() -> dict:
@@ -36,7 +38,8 @@ def main() -> None:
         ENTRY_DOOR: '🚪',
         EXIT_DOOR: '🚪',
         PLAYER: '🤠',
-        COIN: '🌮',
+        TACO: '🌮',
+        COIN: '💰',
         MONSTER: '👾',
         DEAD_PLAYER: '💀'
         }
@@ -95,7 +98,17 @@ def main() -> None:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                         monster['HP'] -= 10
                         if engine.check_creature_is_dead(monster):
-                            current_room[monster['X']][monster['Y']] = EMPTY_CELL
+                            chance = [EMPTY_CELL, EMPTY_CELL, COIN]
+                            current_room[monster['X']][monster['Y']] = random.choice(chance)
+            
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
+                if player['HP'] < 100:
+                    player['HP'] += 10
+                    current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
+                    player_coordinates = engine.new_player_position(player_coordinates, direction)
+                    player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+                    current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+
 
             if engine.check_creature_is_dead(player):
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
