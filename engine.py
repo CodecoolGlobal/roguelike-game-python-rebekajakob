@@ -1,5 +1,3 @@
-import random
-
 EMPTY_CELL = 0
 WALL_CELL = 1
 ENTRY_DOOR = 2
@@ -15,6 +13,7 @@ BOSSES = []
 BASIC_WEAPON = 11
 ADVANCED_WEAPON = 12
 POTION = 13
+
 
 def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, height: int) -> list:
     """Generates the rooms for the game
@@ -43,8 +42,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (9, 19), (9, 25))
         place_inner_wall(room, (10, 19), (10, 25))
         place_inner_wall(room, (11, 19), (11, 25))
-        place_object(room, (4, 3),TACO)
-        place_object(room, (9, 22),TACO)
+        place_object(room, (4, 3), TACO)
+        place_object(room, (9, 22), TACO)
         place_object(room, (5, 5), BASIC_WEAPON)
         current_room_monsters = []
         monster0 = place_monster(room, (5, 7))
@@ -62,10 +61,10 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (7, 21), (7, 25))
         place_inner_wall(room, (12, 21), (12, 29))
         place_inner_wall(room, (0, 25), (7, 25))
-        place_object(room, (2, 27),TACO)
-        place_object(room, (3, 19),TACO)
-        place_object(room, (1, 17),TACO)
-        place_object(room, (16, 16),NPC)
+        place_object(room, (2, 27), TACO)
+        place_object(room, (3, 19), TACO)
+        place_object(room, (1, 17), TACO)
+        place_object(room, (16, 16), NPC)
         current_room_monsters = []
         monster0 = place_monster(room, (3, 8))
         current_room_monsters.append(monster0)
@@ -148,9 +147,11 @@ def create_board(width, heigth) -> list:
     entry_exit_door_positions = [(None, (4, 29)), ((4, 0), (19, 26)), ((0, 26), None)]
     return [create_room(doors[0], doors[1], i, width, heigth) for i, doors in enumerate(entry_exit_door_positions)]
 
+
 def boss_movement(boss, new_directions):
     new_position_boss = (boss[0] + new_directions[0], boss[1] + new_directions[1])
     return new_position_boss
+
 
 def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
     """Adds doors to given room
@@ -196,7 +197,6 @@ def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -
 
 def check_creature_is_dead(player: dict) -> None:
     return player['HP'] <= 0
-
 
 
 if __name__ == "__main__":

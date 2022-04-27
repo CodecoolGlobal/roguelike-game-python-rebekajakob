@@ -32,9 +32,8 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY':[]}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
     return player
-
 
 
 def main() -> None:
@@ -52,8 +51,7 @@ def main() -> None:
         BOSS: '👹',
         BASIC_WEAPON: '🏹',
         ADVANCED_WEAPON: '🔪',
-        POTION: '🍐'
-
+        POTION: '💧'
         }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
@@ -77,13 +75,13 @@ def main() -> None:
                 monster_coordinates = engine.monster_movement((monster['X'], monster['Y']), new_directions)
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
-        
+
         if current_room_index == 2:
             good_movements = 0
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             for boss in engine.BOSSES[0]:
                 if engine.check_target_cell(current_room, (boss['X'], boss['Y']), new_directions) in [EMPTY_CELL, BOSS]:
-                    good_movements +=1
+                    good_movements += 1
             if good_movements == len(engine.BOSSES[0]):
                 for boss in engine.BOSSES[0]:
                     current_room[boss['X']][boss['Y']] = EMPTY_CELL
@@ -91,8 +89,6 @@ def main() -> None:
                     boss_coordinates = engine.boss_movement((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
-
-
 
         button = util.key_pressed()
         if button == 'q':
@@ -143,13 +139,13 @@ def main() -> None:
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
-                if 'BASIC WEAPON'not in player['INVENTORY']: 
+                if 'BASIC WEAPON'not in player['INVENTORY']:
                     player['INVENTORY'].append('BASIC WEAPON')
                 current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
                 player_coordinates = engine.new_player_position(player_coordinates, direction)
                 player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
                 current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
-            
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
                 player['HP'] -= 15
                 for boss_part in engine.BOSSES[0]:
@@ -162,21 +158,33 @@ def main() -> None:
                         if len(engine.BOSSES[0]) == 0:
                             print("YOU WON THE GAME!!")
                             exit()
-            
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
                 print("What do you want?")
-                answer = input("1. Potion (1 coin), 2. Weapon (5 coin): ")
-                if answer == '1' and player['COINS'] >= 1:
-                    print("Here is a potion.")
-                    time.sleep(1.5)
-                    while True:
-                        new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
-                        if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
-                            potion_coordinates = engine.new_player_position((16, 16), new_directions)
-                            current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
-                            player['COINS'] -= 1
-                            break
-            
+                answer = input("1. Potion (1 coin), 2. Weapon (5 coin), 3. Nevermind: ")
+                if answer == '1':
+                    if player['COINS'] >= 1:
+                        print("Here is a potion.")
+                        time.sleep(1.5)
+                        while True:
+                            new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
+                            if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
+                                potion_coordinates = engine.new_player_position((16, 16), new_directions)
+                                current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
+                                player['COINS'] -= 1
+                                break
+                    else:
+                        print("You don't have enough money!")
+                        time.sleep(1)
+                elif answer == '2':
+                    if player['COINS'] >= 5:
+                        pass  # TODO implement buying better weapon
+                    else:
+                        print("You don't have enough money!")
+                        time.sleep(1)
+                elif answer == 3:
+                    pass
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
                 if player['HP'] < 100:
                     player['HP'] += 10
@@ -184,7 +192,7 @@ def main() -> None:
                     player_coordinates = engine.new_player_position(player_coordinates, direction)
                     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
                     current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
-            
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == POTION:
                 if player['HP'] < 100:
                     player['HP'] = 100
@@ -192,7 +200,6 @@ def main() -> None:
                     player_coordinates = engine.new_player_position(player_coordinates, direction)
                     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
                     current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
-
 
             if engine.check_creature_is_dead(player):
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
