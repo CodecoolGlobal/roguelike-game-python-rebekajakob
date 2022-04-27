@@ -72,7 +72,7 @@ def main() -> None:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
                 current_room[monster['X']][monster['Y']] = EMPTY_CELL
-                monster_coordinates = engine.monster_movement((monster['X'], monster['Y']), new_directions)
+                monster_coordinates = engine.creature_position((monster['X'], monster['Y']), new_directions)
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
 
@@ -86,7 +86,7 @@ def main() -> None:
                 for boss in engine.BOSSES[0]:
                     current_room[boss['X']][boss['Y']] = EMPTY_CELL
                 for boss in engine.BOSSES[0]:
-                    boss_coordinates = engine.boss_movement((boss['X'], boss['Y']), new_directions)
+                    boss_coordinates = engine.creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
 
@@ -98,10 +98,7 @@ def main() -> None:
         if button in direction_vectors:
             direction = direction_vectors[button]
             if engine.check_target_cell(current_room, player_coordinates, direction) == EMPTY_CELL:
-                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-                player_coordinates = engine.new_player_position(player_coordinates, direction)
-                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == ENTRY_DOOR:
                 current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
@@ -123,10 +120,7 @@ def main() -> None:
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
                 player['COINS'] += 1
-                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-                player_coordinates = engine.new_player_position(player_coordinates, direction)
-                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
                 player['HP'] -= 10
@@ -141,10 +135,7 @@ def main() -> None:
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
                 if 'BASIC WEAPON'not in player['INVENTORY']:
                     player['INVENTORY'].append('BASIC WEAPON')
-                current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-                player_coordinates = engine.new_player_position(player_coordinates, direction)
-                player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
                 player['HP'] -= 15
@@ -169,7 +160,7 @@ def main() -> None:
                         while True:
                             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
                             if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
-                                potion_coordinates = engine.new_player_position((16, 16), new_directions)
+                                potion_coordinates = engine.creature_position((16, 16), new_directions)
                                 current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
                                 player['COINS'] -= 1
                                 break
@@ -188,18 +179,12 @@ def main() -> None:
             elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
                 if player['HP'] < 100:
                     player['HP'] += 10
-                    current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-                    player_coordinates = engine.new_player_position(player_coordinates, direction)
-                    player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                    current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+                    player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == POTION:
                 if player['HP'] < 100:
                     player['HP'] = 100
-                    current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-                    player_coordinates = engine.new_player_position(player_coordinates, direction)
-                    player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
-                    current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+                    player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             if engine.check_creature_is_dead(player):
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER

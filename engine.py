@@ -131,11 +131,6 @@ def place_boss(room: list, coordinate: tuple) -> None:
     return boss
 
 
-def monster_movement(monster, new_directions):
-    new_position_monster = (monster[0] + new_directions[0], monster[1] + new_directions[1])
-    return new_position_monster
-
-
 def place_object(room: int, coordinate: tuple, item: int) -> None:
     room[coordinate[0]][coordinate[1]] = item
 
@@ -148,9 +143,9 @@ def create_board(width, heigth) -> list:
     return [create_room(doors[0], doors[1], i, width, heigth) for i, doors in enumerate(entry_exit_door_positions)]
 
 
-def boss_movement(boss, new_directions):
-    new_position_boss = (boss[0] + new_directions[0], boss[1] + new_directions[1])
-    return new_position_boss
+def creature_position(creature_coordinates: tuple, new_directions: tuple) -> tuple:
+    new_position = creature_coordinates[0] + new_directions[0], creature_coordinates[1] + new_directions[1]
+    return new_position
 
 
 def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
@@ -181,17 +176,18 @@ def put_player_on_board(room: list, player: dict) -> None:
     room[player['X']][player['Y']] = PLAYER
 
 
-def new_player_position(old_player_coordinates: tuple, direction: tuple) -> tuple:
-    """puts player 1 block in the direction
-    of the players current position"""
-    new_player_coordinates = (old_player_coordinates[0] + direction[0], old_player_coordinates[1] + direction[1])
-    return new_player_coordinates
+def player_step_there(player: dict, current_room: list, player_coordinates: tuple, direction: tuple) -> tuple:
+    current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
+    player_coordinates = creature_position(player_coordinates, direction)
+    player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
+    current_room[player_coordinates[0]][player_coordinates[1]] = PLAYER
+    return player_coordinates
 
 
 def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -> int:
     """Returns what is in the the target cell
     """
-    potential_cell = new_player_position(player_coordinates, direction)
+    potential_cell = creature_position(player_coordinates, direction)
     return room[potential_cell[0]][potential_cell[1]]
 
 
