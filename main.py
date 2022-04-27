@@ -138,7 +138,7 @@ def main() -> None:
                         boss_part['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(boss_part):
                             engine.BOSSES[0].remove(boss_part)
-                            chance = [EMPTY_CELL, EMPTY_CELL, COIN]
+                            chance = [EMPTY_CELL]
                             current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                         if len(engine.BOSSES[0]) == 0:
                             print("YOU WON THE GAME!!")
