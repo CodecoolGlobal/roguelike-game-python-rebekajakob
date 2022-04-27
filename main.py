@@ -66,6 +66,22 @@ def main() -> None:
                 monster_coordinates = engine.monster_movement((monster['X'], monster['Y']), new_directions)
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
+        
+        if current_room_index == 2:
+            good_movements = 0
+            new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
+            for boss in engine.BOSSES[0]:
+                if engine.check_target_cell(current_room, (boss['X'], boss['Y']), new_directions) in [EMPTY_CELL, BOSS]:
+                    good_movements +=1
+            if good_movements == len(engine.BOSSES[0]):
+                for boss in engine.BOSSES[0]:
+                    current_room[boss['X']][boss['Y']] = EMPTY_CELL
+                for boss in engine.BOSSES[0]:
+                    boss_coordinates = engine.boss_movement((boss['X'], boss['Y']), new_directions)
+                    boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
+                    current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
+
+
 
         button = util.key_pressed()
         if button == 'q':

@@ -148,6 +148,9 @@ def create_board(width, heigth) -> list:
     entry_exit_door_positions = [(None, (4, 29)), ((4, 0), (19, 26)), ((0, 26), None)]
     return [create_room(doors[0], doors[1], i, width, heigth) for i, doors in enumerate(entry_exit_door_positions)]
 
+def boss_movement(boss, new_directions):
+    new_position_boss = (boss[0] + new_directions[0], boss[1] + new_directions[1])
+    return new_position_boss
 
 def create_doors(room: list, entry_door: tuple, exit_door: tuple) -> None:
     """Adds doors to given room
