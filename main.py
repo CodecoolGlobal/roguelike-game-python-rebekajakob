@@ -99,7 +99,7 @@ def main() -> None:
                 player['ATTACK'] = 20
             current_room = board[game_state["current_room_index"]]
             engine.put_player_on_board(current_room, player)
-            
+            ui.display_board(current_room, player, color_scheme)
             player_coordinates = player['X'], player['Y']
             do_monster_movement(game_state, current_room, timer, player, color_scheme)
             timer += 1
@@ -112,7 +112,7 @@ def main() -> None:
                     break
     finally:
         exit()
-        # termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
 def handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates):
