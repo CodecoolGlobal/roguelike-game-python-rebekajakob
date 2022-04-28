@@ -49,9 +49,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (5, 5), BASIC_WEAPON)
         monster_positions = [(5, 7), (4, 27), (17, 25)]
         MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
-        strong_monster_positions = [(15, 3)]
+        strong_monster_positions = []
         STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
-
+        
     if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -66,6 +66,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (16, 25), NPC)
         monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
         MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
+        strong_monster_positions = [(3, 22), (10,22)]
+        STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
 
     if level == 2:
         place_inner_wall(room, (5, 10), (5, 10))
@@ -78,6 +80,8 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (2, 2), TACO)
         monster_positions = []
         MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
+        strong_monster_positions = []
+        STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
         boss_positions = [(10, 10), (10, 11), (10, 12), (10, 13), (10, 14), (11, 10), (11, 11), (11, 12), (11, 13), (11, 14), (12, 10), (12, 11), (12, 12), (12, 13), (12, 14), (13, 10), (13, 11), (13, 12), (13, 13), (13, 14), (14, 10), (14, 11), (14, 12), (14, 13), (14, 14)]
         BOSSES.append([place_boss(room, boss_position) for boss_position in boss_positions])
 
