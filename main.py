@@ -263,6 +263,7 @@ def main() -> None:
                     player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             if engine.check_creature_is_dead(player):
+                player['HP'] = 0
                 current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
                 is_running = False
                 util.clear_screen()
