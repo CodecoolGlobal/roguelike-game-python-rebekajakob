@@ -77,30 +77,30 @@ def main() -> None:
     try:
         tty.setcbreak(sys.stdin.fileno())
         timer = 0
+        game_state = {"current_room_index": 0, "current_room":board[0]}
         while True:
-            current_room_index = CURRENTROOMINDEX
             if 'BASIC WEAPON' in player['INVENTORY']:
                 player['ATTACK'] = 10
             if 'ADVANCED WEAPON' in player['INVENTORY']:
                 player['ATTACK'] = 20
-            current_room = board[current_room_index]
+            current_room = board[game_state["current_room_index"]]
             engine.put_player_on_board(current_room, player)
             
             player_coordinates = player['X'], player['Y']
-            do_monster_movement(current_room_index, current_room, timer, player, color_scheme)
+            do_monster_movement(game_state, current_room, timer, player, color_scheme)
             timer += 1
             time.sleep(0.02)
             if isData():
                 button = sys.stdin.read(1)
                 if button == '\x1b':         # x1b is ESC
                     break
-                if not handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates): 
+                if not handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates): 
                     break
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
-def handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates):
+def handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates):
     if button == 'q':
         print("Goodbye!")
         exit()
@@ -119,22 +119,22 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == ENTRY_DOOR:
             current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-            current_room_index -= 1
-            current_room = board[current_room_index]
-            if current_room_index == 0:
+            game_state["current_room_index"] -= 1
+            current_room = board[game_state["current_room_index"]]
+            if game_state["current_room_index"] == 0:
                 player['X'], player['Y'] = 4, 28
-            elif current_room_index == 1:
+            elif game_state["current_room_index"] == 1:
                 player['X'], player['Y'] = 18, 26
             
 
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == EXIT_DOOR:
             current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
-            current_room_index += 1
-            current_room = board[current_room_index]
-            if current_room_index == 1:
+            game_state["current_room_index"] += 1
+            current_room = board[game_state["current_room_index"]]
+            if game_state["current_room_index"] == 1:
                 player['X'], player['Y'] = 4, 1
-            elif current_room_index == 2:
+            elif game_state["current_room_index"] == 2:
                 player['X'], player['Y'] = 1, 26
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
@@ -143,21 +143,21 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
             player['HP'] -= 10
-            for monster in engine.MONSTERS[current_room_index]:
+            for monster in engine.MONSTERS[game_state["current_room_index"]]:
                 if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                     monster['HP'] -= player['ATTACK']
                     if engine.check_creature_is_dead(monster):
-                        engine.MONSTERS[current_room_index].remove(monster)
+                        engine.MONSTERS[game_state["current_room_index"]].remove(monster)
                         chance = [EMPTY_CELL, COIN]
                         current_room[monster['X']][monster['Y']] = random.choice(chance)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == STRONG_MONSTER:
             player['HP'] -= 15
-            for monster in engine.STRONG_MONSTERS[current_room_index]:
+            for monster in engine.STRONG_MONSTERS[game_state["current_room_index"]]:
                 if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                     monster['HP'] -= player['ATTACK']
                     if engine.check_creature_is_dead(monster):
-                        engine.STRONG_MONSTERS[current_room_index].remove(monster)
+                        engine.STRONG_MONSTERS[game_state["current_room_index"]].remove(monster)
                         chance = [COIN]
                         current_room[monster['X']][monster['Y']] = random.choice(chance)
 
@@ -182,7 +182,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                         current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                     if len(engine.BOSSES[0]) == 0:
                         # util.clear_screen()
-                        ui.display_board(current_room, player, color_scheme, current_room_index)
+                        ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
                         print("YOU WON THE GAME!!")
                         exit()
 
@@ -239,18 +239,18 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
         if engine.check_creature_is_dead(player):
             current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
             # util.clear_screen()
-            ui.display_board(current_room, player, color_scheme, current_room_index)
+            ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
             print("GAME OVER! You are dead!")
             print()
             return False
         
-        ui.display_board(current_room, player, color_scheme, current_room_index)
+        ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
     return True
 
 
-def do_monster_movement(current_room_index, current_room, timer, player, color_scheme):
+def do_monster_movement(game_state, current_room, timer, player, color_scheme):
     if timer % 50 == 0:
-        for monster in engine.MONSTERS[current_room_index]:
+        for monster in engine.MONSTERS[game_state["current_room_index"]]:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
                 current_room[monster['X']][monster['Y']] = EMPTY_CELL
@@ -258,7 +258,7 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = MONSTER
 
-        for monster in engine.STRONG_MONSTERS[current_room_index]:
+        for monster in engine.STRONG_MONSTERS[game_state["current_room_index"]]:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
                 current_room[monster['X']][monster['Y']] = EMPTY_CELL
@@ -266,7 +266,7 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
                 monster['X'], monster['Y'] = monster_coordinates[0], monster_coordinates[1]
                 current_room[monster_coordinates[0]][monster_coordinates[1]] = STRONG_MONSTER
 
-        if current_room_index == 2:
+        if game_state["current_room_index"] == 2:
             good_movements = 0
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             for boss in engine.BOSSES[0]:
@@ -279,7 +279,7 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
                     boss_coordinates = engine.new_creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
-        ui.display_board(current_room, player, color_scheme, current_room_index)
+        ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
         
 
 
