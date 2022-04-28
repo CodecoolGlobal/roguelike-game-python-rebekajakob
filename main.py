@@ -1,3 +1,4 @@
+from defer import return_value
 import util
 import engine
 import ui
@@ -12,6 +13,8 @@ import termios
 
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
+# PLAYER_START_X = 4
+# PLAYER_START_Y = 28
 
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
@@ -31,6 +34,8 @@ BASIC_WEAPON = 11
 ADVANCED_WEAPON = 12
 POTION = 13
 STRONG_MONSTER = 14
+current_room_index = 0
+
 
 
 def create_player() -> dict:
@@ -64,40 +69,37 @@ def main() -> None:
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     util.clear_screen()
-    is_running = True
-    current_room_index = 0
-    while is_running:
-        if 'BASIC WEAPON' in player['INVENTORY']:
-            player['ATTACK'] = 10
-        if 'ADVANCED WEAPON' in player['INVENTORY']:
-            player['ATTACK'] = 20
-        current_room = board[current_room_index]
-        engine.put_player_on_board(current_room, player)
-        ui.display_board(current_room, player, color_scheme)
-        player_coordinates = player['X'], player['Y']
 
-        def isData():
-            return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
+    def isData():
+        return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
 
-        old_settings = termios.tcgetattr(sys.stdin)
-        try:
-            tty.setcbreak(sys.stdin.fileno())
-            timer = 0
-            while True:
-                timer += 0.01
-                do_monster_movement(current_room_index, current_room, timer, player, color_scheme)
-                time.sleep(0.01)
-                if isData():
-                    button = sys.stdin.read(1)
-                    if button == '\x1b':         # x1b is ESC
-                        break
-                    handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates)# TODO kiirni functionra
-        finally:
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+    old_settings = termios.tcgetattr(sys.stdin)
+    try:
+        tty.setcbreak(sys.stdin.fileno())
+        timer = 0
+        while True:
+            if 'BASIC WEAPON' in player['INVENTORY']:
+                player['ATTACK'] = 10
+            if 'ADVANCED WEAPON' in player['INVENTORY']:
+                player['ATTACK'] = 20
+            current_room = board[current_room_index]
+            engine.put_player_on_board(current_room, player)
+            
+            player_coordinates = player['X'], player['Y']
+            do_monster_movement(current_room_index, current_room, timer, player, color_scheme)
+            timer += 1
+            time.sleep(0.02)
+            if isData():
+                button = sys.stdin.read(1)
+                if button == '\x1b':         # x1b is ESC
+                    break
+                if not handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates): 
+                    break
+    finally:
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
 def handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates):
-    button = util.key_pressed()
     if button == 'q':
         print("Goodbye!")
         exit()
@@ -122,6 +124,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                 player['X'], player['Y'] = 4, 28
             elif current_room_index == 1:
                 player['X'], player['Y'] = 18, 26
+
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == EXIT_DOOR:
             current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
@@ -176,7 +179,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                         chance = [EMPTY_CELL]
                         current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                     if len(engine.BOSSES[0]) == 0:
-                        util.clear_screen()
+                        # util.clear_screen()
                         ui.display_board(current_room, player, color_scheme)
                         print("YOU WON THE GAME!!")
                         exit()
@@ -225,7 +228,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
             if player['HP'] < 100:
                 player['HP'] += 15
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
-
+                
         elif engine.check_target_cell(current_room, player_coordinates, direction) == POTION:
             if player['HP'] < 100:
                 player['HP'] = 100
@@ -233,17 +236,18 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
 
         if engine.check_creature_is_dead(player):
             current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
-            is_running = False
-            util.clear_screen()
+            # util.clear_screen()
             ui.display_board(current_room, player, color_scheme)
             print("GAME OVER! You are dead!")
             print()
-            
+            return "DEAD"
+        
+        ui.display_board(current_room, player, color_scheme)
+    return "NOTHING"
 
 
 def do_monster_movement(current_room_index, current_room, timer, player, color_scheme):
-    if timer % 1 == 0:
-        ui.display_board(current_room, player, color_scheme)
+    if timer % 50 == 0:
         for monster in engine.MONSTERS[current_room_index]:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
             if engine.check_target_cell(current_room, (monster['X'], monster['Y']), new_directions) == 0:
@@ -273,6 +277,7 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
                     boss_coordinates = engine.new_creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
+        ui.display_board(current_room, player, color_scheme)
 
 
 
