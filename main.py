@@ -72,6 +72,8 @@ def main() -> None:
     util.clear_screen()
     is_running = True
     current_room_index = 0
+    dead_monsters = 0
+    cheater = False
     while is_running:
         if 'BASIC WEAPON' in player['INVENTORY']:
             player['ATTACK'] = 10
@@ -119,6 +121,7 @@ def main() -> None:
         elif button == 'c':
             player['COINS'] = 999
             player['HP'] = 999
+            cheater = True
         elif button == 'i':
             print(f"INVENTORY: {', '.join(player['INVENTORY'])}")
             time.sleep(2)
@@ -157,6 +160,7 @@ def main() -> None:
                         monster['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(monster):
                             engine.MONSTERS[current_room_index].remove(monster)
+                            dead_monsters += 1
                             chance = [EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
@@ -167,6 +171,7 @@ def main() -> None:
                         monster['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(monster):
                             engine.STRONG_MONSTERS[current_room_index].remove(monster)
+                            dead_monsters += 1
                             chance = [COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
@@ -190,8 +195,13 @@ def main() -> None:
                             chance = [EMPTY_CELL]
                             current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                         if len(engine.BOSSES[0]) == 0:
+                            dead_monsters += 1
                             util.clear_screen()
                             ui.display_board(current_room, player, color_scheme)
+                            if not cheater:
+                                highscore = player['NAME'], str(player['COINS']), str(dead_monsters)
+                                with open("log.txt", "a") as log:
+                                    log.write((' '.join(highscore) + '\n'))
                             print("YOU WON THE GAME!!")
                             exit()
 
@@ -205,9 +215,9 @@ def main() -> None:
                     
                 
                 print("What do you want?")
-                answer = input("1. Potion (10 coin), 2. Weapon (50 coin), 3. Nevermind: ")
+                answer = input("1. Potion (15 coin), 2. Weapon (75 coin), 3. Nevermind: ")
                 if answer == '1':
-                    if player['COINS'] >= 10:
+                    if player['COINS'] >= 15:
                         print("Here is a potion.")
                         time.sleep(1.5)
                         while True:
@@ -215,13 +225,13 @@ def main() -> None:
                             if engine.check_target_cell(current_room, (16, 25), new_directions) == EMPTY_CELL:
                                 potion_coordinates = engine.new_creature_position((16, 25), new_directions)
                                 current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
-                                player['COINS'] -= 10
+                                player['COINS'] -= 15
                                 break
                     else:
                         print("You don't have enough money!")
                         time.sleep(1)
                 elif answer == '2':
-                    if player['COINS'] >= 50:
+                    if player['COINS'] >= 75:
                         print("Here is your weapon.")
                         time.sleep(1.5)
                         while True:
@@ -229,7 +239,7 @@ def main() -> None:
                             if engine.check_target_cell(current_room, (16, 25), new_directions) == EMPTY_CELL:
                                 weapon_coordinates = engine.new_creature_position((16, 25), new_directions)
                                 current_room[weapon_coordinates[0]][weapon_coordinates[1]] = ADVANCED_WEAPON
-                                player['COINS'] -= 50
+                                player['COINS'] -= 75
                                 break
                     else:
                         print("You don't have enough money!")
