@@ -189,6 +189,8 @@ def main() -> None:
                     answer = input('Do you want to hunt more? (Y,N): ')
                     if answer == 'y':
                         engine.spawn_monsters(current_room)
+                        util.clear_screen()
+                        ui.display_board(current_room, player, color_scheme)
                     
                 
                 print("What do you want?")
