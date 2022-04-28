@@ -63,7 +63,9 @@ def main() -> None:
         time.sleep(1.5)
         exit()
     elif menu_option == 2:
-        pass
+        print()
+        ui.highscore()
+        exit()
     character_name, avatar  = ui.newgame_settings()
     color_scheme[4] = avatar
     player = create_player()

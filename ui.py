@@ -48,3 +48,19 @@ def newgame_settings():
     while avatar_number not in ["1","2","3","4","5"]:
         avatar_number = input("Please choose a number from above: ")
     return name, valid_avatars[int(avatar_number)-1]
+
+def highscore():
+    with open("log.txt","r") as text:
+        scores = text.read().splitlines()
+        high_scores = []
+        for item in scores:
+            score = int(item.split()[1]) + int(item.split()[2])
+            name = item.split()[0]
+            high_scores.append((score,name))
+        high_scores.sort(reverse = True)
+        for item in high_scores[:5]:
+            print(item[1]+ "  " + str(item[0]))
+        
+    
+
+
