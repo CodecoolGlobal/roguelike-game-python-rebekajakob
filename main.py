@@ -24,6 +24,7 @@ BOSS = 10
 BASIC_WEAPON = 11
 ADVANCED_WEAPON = 12
 POTION = 13
+STRONG_MONSTER = 14
 
 
 def create_player() -> dict:
@@ -51,7 +52,8 @@ def main() -> None:
         BOSS: '👹',
         BASIC_WEAPON: '🏹',
         ADVANCED_WEAPON: '🔪',
-        POTION: '💧'
+        POTION: '💧',
+        STRONG_MONSTER: '🦂'
         }
     player = create_player()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
@@ -61,7 +63,7 @@ def main() -> None:
     while is_running:
         if 'BASIC WEAPON' in player['INVENTORY']:
             player['ATTACK'] = 10
-        elif 'ADVANCED WEAPON' in player['INVENTORY']:
+        if 'ADVANCED WEAPON' in player['INVENTORY']:
             player['ATTACK'] = 20
         current_room = board[current_room_index]
         engine.put_player_on_board(current_room, player)
@@ -135,9 +137,24 @@ def main() -> None:
                             chance = [EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == STRONG_MONSTER:
+                player['HP'] -= 15
+                for monster in engine.STRONG_MONSTERS[current_room_index]:
+                    if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
+                        monster['HP'] -= player['ATTACK']
+                        if engine.check_creature_is_dead(monster):
+                            engine.STRONG_MONSTERS[current_room_index].remove(monster)
+                            chance = [COIN]
+                            current_room[monster['X']][monster['Y']] = random.choice(chance)
+
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
                 if 'BASIC WEAPON'not in player['INVENTORY']:
                     player['INVENTORY'].append('BASIC WEAPON')
+                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+
+            elif engine.check_target_cell(current_room, player_coordinates, direction) == ADVANCED_WEAPON:
+                if 'ADVANCED WEAPON'not in player['INVENTORY']:
+                    player['INVENTORY'].append('ADVANCED WEAPON')
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
@@ -164,8 +181,8 @@ def main() -> None:
                         time.sleep(1.5)
                         while True:
                             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
-                            if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
-                                potion_coordinates = engine.new_creature_position((16, 16), new_directions)
+                            if engine.check_target_cell(current_room, (16, 25), new_directions) == EMPTY_CELL:
+                                potion_coordinates = engine.new_creature_position((16, 25), new_directions)
                                 current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
                                 player['COINS'] -= 10
                                 break
@@ -174,7 +191,15 @@ def main() -> None:
                         time.sleep(1)
                 elif answer == '2':
                     if player['COINS'] >= 50:
-                        pass  # TODO implement buying better weapon
+                        print("Here is your weapon.")
+                        time.sleep(1.5)
+                        while True:
+                            new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])
+                            if engine.check_target_cell(current_room, (16, 25), new_directions) == EMPTY_CELL:
+                                weapon_coordinates = engine.new_creature_position((16, 25), new_directions)
+                                current_room[weapon_coordinates[0]][weapon_coordinates[1]] = ADVANCED_WEAPON
+                                player['COINS'] -= 50
+                                break
                     else:
                         print("You don't have enough money!")
                         time.sleep(1)
