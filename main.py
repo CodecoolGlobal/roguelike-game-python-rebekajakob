@@ -34,7 +34,7 @@ BASIC_WEAPON = 11
 ADVANCED_WEAPON = 12
 POTION = 13
 STRONG_MONSTER = 14
-current_room_index = 0
+CURRENT_ROOM_INDEX = 0
 
 
 
@@ -48,7 +48,7 @@ def create_player() -> dict:
     return player
 
 
-def main() -> None:
+def main(current_room_index) -> None:
     color_scheme = {
         EMPTY_CELL: '  ',
         WALL_CELL: '🌵',
@@ -86,15 +86,18 @@ def main() -> None:
             engine.put_player_on_board(current_room, player)
             
             player_coordinates = player['X'], player['Y']
-            do_monster_movement(current_room_index, current_room, timer, player, color_scheme)
+            do_monster_movement(CURRENT_ROOM_INDEX, current_room, timer, player, color_scheme)
             timer += 1
             time.sleep(0.02)
             if isData():
                 button = sys.stdin.read(1)
                 if button == '\x1b':         # x1b is ESC
                     break
-                if not handle_keypress(button, player, current_room, current_room_index, board, color_scheme, player_coordinates): 
+                index = handle_keypress(button, player, current_room, CURRENT_ROOM_INDEX, board, color_scheme, player_coordinates)
+                if index == False:
                     break
+                
+
     finally:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
@@ -124,6 +127,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                 player['X'], player['Y'] = 4, 28
             elif current_room_index == 1:
                 player['X'], player['Y'] = 18, 26
+            
 
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == EXIT_DOOR:
@@ -243,7 +247,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
             return False
         
         ui.display_board(current_room, player, color_scheme, current_room_index)
-    return True
+    return current_room_index
 
 
 def do_monster_movement(current_room_index, current_room, timer, player, color_scheme):
@@ -283,4 +287,4 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
 
 
 if __name__ == '__main__':
-    main()
+    main(CURRENT_ROOM_INDEX)
