@@ -48,7 +48,7 @@ def main() -> None:
         COIN: '💰',
         MONSTER: '👾',
         DEAD_PLAYER: '💀',
-        NPC: '🎅',
+        NPC: '🧙',
         BOSS: '👹',
         BASIC_WEAPON: '🏹',
         ADVANCED_WEAPON: '🔪',
