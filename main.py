@@ -33,7 +33,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': [], 'NAME' : None}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': [], 'NAME': None}
     return player
 
 
@@ -66,7 +66,7 @@ def main() -> None:
         elif menu_option == 2:
             print()
             ui.highscore()
-    character_name, avatar  = ui.newgame_settings()
+    character_name, avatar = ui.newgame_settings()
     color_scheme[4] = avatar
     player = create_player()
     player['NAME'] = character_name.upper()
@@ -159,10 +159,10 @@ def main() -> None:
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
-                player['HP'] -= int(10 * random.uniform(0.7, 1.3))
+                player['HP'] -= int(10 * engine.random_damage_multiplier())
                 for monster in engine.MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
-                        monster['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
+                        monster['HP'] -= player['ATTACK'] * engine.random_damage_multiplier()
                         if engine.check_creature_is_dead(monster):
                             engine.MONSTERS[current_room_index].remove(monster)
                             dead_monsters += 1
@@ -170,10 +170,10 @@ def main() -> None:
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == STRONG_MONSTER:
-                player['HP'] -= int(15 * random.uniform(0.7, 1.3))
+                player['HP'] -= int(15 * engine.random_damage_multiplier())
                 for monster in engine.STRONG_MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
-                        monster['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
+                        monster['HP'] -= player['ATTACK'] * engine.random_damage_multiplier()
                         if engine.check_creature_is_dead(monster):
                             engine.STRONG_MONSTERS[current_room_index].remove(monster)
                             dead_monsters += 1
@@ -191,10 +191,10 @@ def main() -> None:
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
-                player['HP'] -= int(15 * random.uniform(0.7, 1.3))
+                player['HP'] -= int(15 - engine.random_damage_multiplier())
                 for boss_part in engine.BOSSES[0]:
                     if boss_part['X'] == player_coordinates[0] + direction[0] and boss_part['Y'] == player_coordinates[1] + direction[1]:
-                        boss_part['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
+                        boss_part['HP'] -= player['ATTACK'] * engine.random_damage_multiplier()
                         if engine.check_creature_is_dead(boss_part):
                             engine.BOSSES[0].remove(boss_part)
                             chance = [EMPTY_CELL]
@@ -207,7 +207,9 @@ def main() -> None:
                                 highscore = player['NAME'], str(player['COINS']), str(dead_monsters)
                                 with open("log.txt", "a") as log:
                                     log.write((' '.join(highscore) + '\n'))
-                            print("YOU WON THE GAME!!")
+                            print(f"CONGRATULATION {player['NAME']} ! YOU WON THE GAME!!")
+                            time.sleep(1)
+                            ui.roll_the_credits()
                             exit()
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
@@ -217,9 +219,8 @@ def main() -> None:
                         engine.spawn_monsters(current_room)
                         util.clear_screen()
                         ui.display_board(current_room, player, color_scheme)
-                    
-                
-                print("What do you want?")
+
+                print(f"Hello {player['NAME']}! What can I do for you?")
                 answer = input("1. Potion (15 coin), 2. Weapon (75 coin), 3. Nevermind: ")
                 if answer == '1':
                     if player['COINS'] >= 15:
@@ -269,7 +270,8 @@ def main() -> None:
                 util.clear_screen()
                 ui.display_board(current_room, player, color_scheme)
                 print("GAME OVER! You are dead!")
-                print()
+                time.sleep(1)
+                ui.roll_the_credits()
                 break
 
         util.clear_screen()
