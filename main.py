@@ -120,8 +120,7 @@ def main() -> None:
             player['COINS'] = 999
             player['HP'] = 999
         elif button == 'i':
-            inv = ', '.join(player['INVENTORY'])
-            print(inv)
+            print(f"INVENTORY: {', '.join(player['INVENTORY'])}")
             time.sleep(2)
         direction_vectors = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
         if button in direction_vectors:
