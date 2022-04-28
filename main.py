@@ -109,10 +109,10 @@ def main() -> None:
                 button = sys.stdin.read(1)
                 if button == '\x1b':        # x1b is ESC
                     break
-                if handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates) is False: 
+                if handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates) is False:
                     break
     finally:
-        exit()
+        # exit()
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
@@ -145,8 +145,6 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
                 player['X'], player['Y'] = 4, 28
             elif game_state["current_room_index"] == 1:
                 player['X'], player['Y'] = 18, 26
-            
-
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == EXIT_DOOR:
             current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
@@ -271,7 +269,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
             print()
             return False
         
-        ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
+        ui.display_board(current_room, player, color_scheme)
     return True
 
 
