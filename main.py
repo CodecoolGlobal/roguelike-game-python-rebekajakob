@@ -167,7 +167,7 @@ def main() -> None:
                             if engine.check_target_cell(current_room, (16, 16), new_directions) == EMPTY_CELL:
                                 potion_coordinates = engine.new_creature_position((16, 16), new_directions)
                                 current_room[potion_coordinates[0]][potion_coordinates[1]] = POTION
-                                player['COINS'] -= 1
+                                player['COINS'] -= 10
                                 break
                     else:
                         print("You don't have enough money!")
