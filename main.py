@@ -250,7 +250,7 @@ def main() -> None:
                     pass
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
-                if player['HP'] < 100:
+                if player['HP'] < 85:
                     player['HP'] += 15
                     player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 

@@ -1,5 +1,5 @@
 def display_board(board: list, player: dict, color_scheme: dict) -> None:
-    print(f"NAME: {player['NAME']}   HP: {player['HP']}   COINS: {player['COINS']}   ATTACK: {player['ATTACK']}")
+    print(f"NAME: {player['NAME']}   HP: {player['HP']} %   COINS: {player['COINS']}   ATTACK: {player['ATTACK']}")
     for row in board:
         for cell in row:
             print(color_scheme[cell], end=' ')
