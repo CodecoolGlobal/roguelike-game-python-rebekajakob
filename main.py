@@ -156,10 +156,10 @@ def main() -> None:
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
-                player['HP'] -= 10
+                player['HP'] -= int(10 * random.uniform(0.7, 1.3))
                 for monster in engine.MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
-                        monster['HP'] -= player['ATTACK']
+                        monster['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
                         if engine.check_creature_is_dead(monster):
                             engine.MONSTERS[current_room_index].remove(monster)
                             dead_monsters += 1
@@ -167,10 +167,10 @@ def main() -> None:
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == STRONG_MONSTER:
-                player['HP'] -= 15
+                player['HP'] -= int(15 * random.uniform(0.7, 1.3))
                 for monster in engine.STRONG_MONSTERS[current_room_index]:
                     if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
-                        monster['HP'] -= player['ATTACK']
+                        monster['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
                         if engine.check_creature_is_dead(monster):
                             engine.STRONG_MONSTERS[current_room_index].remove(monster)
                             dead_monsters += 1
@@ -188,10 +188,10 @@ def main() -> None:
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
-                player['HP'] -= 15
+                player['HP'] -= int(15 * random.uniform(0.7, 1.3))
                 for boss_part in engine.BOSSES[0]:
                     if boss_part['X'] == player_coordinates[0] + direction[0] and boss_part['Y'] == player_coordinates[1] + direction[1]:
-                        boss_part['HP'] -= player['ATTACK']
+                        boss_part['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
                         if engine.check_creature_is_dead(boss_part):
                             engine.BOSSES[0].remove(boss_part)
                             chance = [EMPTY_CELL]
