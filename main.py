@@ -33,7 +33,7 @@ def create_player() -> dict:
     'Y'=starter position
     'HP'= hitpoint
     """
-    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': []}
+    player = {'X': PLAYER_START_X, 'Y': PLAYER_START_Y, 'HP': 100, 'COINS': 0, 'ATTACK': 5, 'INVENTORY': [], 'NAME' : None}
     return player
 
 
@@ -55,7 +55,19 @@ def main() -> None:
         POTION: '💧',
         STRONG_MONSTER: '🦂'
         }
+    menu_option = ui.menu()
+    if menu_option == 4:
+        exit()
+    elif menu_option == 3:
+        ui.credits()
+        time.sleep(1.5)
+        exit()
+    elif menu_option == 2:
+        pass
+    character_name, avatar  = ui.newgame_settings()
+    color_scheme[4] = avatar
     player = create_player()
+    player['NAME'] = character_name.upper()
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     util.clear_screen()
     is_running = True
