@@ -157,7 +157,7 @@ def main() -> None:
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
                 print("What do you want?")
-                answer = input("1. Potion (1 coin), 2. Weapon (5 coin), 3. Nevermind: ")
+                answer = input("1. Potion (10 coin), 2. Weapon (50 coin), 3. Nevermind: ")
                 if answer == '1':
                     if player['COINS'] >= 10:
                         print("Here is a potion.")
