@@ -55,17 +55,17 @@ def main() -> None:
         POTION: '💧',
         STRONG_MONSTER: '🦂'
         }
-    menu_option = ui.menu()
-    if menu_option == 4:
-        exit()
-    elif menu_option == 3:
-        ui.credits()
-        time.sleep(1.5)
-        exit()
-    elif menu_option == 2:
-        print()
-        ui.highscore()
-        exit()
+    ui.greet()
+    menu_option = None
+    while menu_option != 1:
+        menu_option = ui.menu()
+        if menu_option == 4:
+            exit()
+        elif menu_option == 3:
+            ui.credits()
+        elif menu_option == 2:
+            print()
+            ui.highscore()
     character_name, avatar  = ui.newgame_settings()
     color_scheme[4] = avatar
     player = create_player()

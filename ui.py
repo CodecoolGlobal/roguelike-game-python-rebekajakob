@@ -7,11 +7,6 @@ def display_board(board: list, player: dict, color_scheme: dict) -> None:
     print()
 
 def menu():
-    print('''Hello adventurer''')
-    answer = input('Are you ready for the game of your life? (y/n) ')
-    if answer == "n":
-        print("Bye")
-        exit()
     print('''
     1. New Game
     2. Highscore
@@ -22,6 +17,13 @@ def menu():
     while menu_option not in ["1","2","3","4"]:
         menu_option = input("Please choose a number from above: ")
     return int(menu_option)
+
+def greet():
+    print('''Hello adventurer''')
+    answer = input('Are you ready for the game of your life? (y/n) ')
+    if answer == "n":
+        print("Bye")
+        exit()
 
 def credits():
     print('''Our lovely creators are:
