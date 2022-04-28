@@ -93,9 +93,15 @@ def main(current_room_index) -> None:
                 button = sys.stdin.read(1)
                 if button == '\x1b':         # x1b is ESC
                     break
-                index = handle_keypress(button, player, current_room, CURRENT_ROOM_INDEX, board, color_scheme, player_coordinates)
-                if index == False:
-                    break
+                event = handle_keypress(button, player, current_room, CURRENT_ROOM_INDEX, board, color_scheme, player_coordinates)
+                if event == "exit door":
+                    current_room_index += 1
+                    ui.display_board(current_room, player, color_scheme, current_room_index)
+
+                if event == "entry door":
+                    current_room_index -= 1
+                    ui.display_board(current_room, player, color_scheme, current_room_index)
+
                 
 
     finally:
@@ -127,6 +133,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                 player['X'], player['Y'] = 4, 28
             elif current_room_index == 1:
                 player['X'], player['Y'] = 18, 26
+            return "entry door"
             
 
 
@@ -138,6 +145,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                 player['X'], player['Y'] = 4, 1
             elif current_room_index == 2:
                 player['X'], player['Y'] = 1, 26
+            return "exit door"
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
             player['COINS'] += random.randrange(5, 21)
