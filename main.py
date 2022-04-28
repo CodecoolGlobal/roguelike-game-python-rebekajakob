@@ -112,8 +112,8 @@ def main() -> None:
                 if handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates) is False:
                     break
     finally:
-        # exit()
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+        exit()
+        # termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
 def handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates):
