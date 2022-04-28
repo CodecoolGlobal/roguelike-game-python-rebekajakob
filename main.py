@@ -122,7 +122,7 @@ def main() -> None:
                     player['X'], player['Y'] = 1, 26
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
-                player['COINS'] += 1
+                player['COINS'] += random.randrange(5, 21)
                 player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
@@ -132,7 +132,7 @@ def main() -> None:
                         monster['HP'] -= player['ATTACK']
                         if engine.check_creature_is_dead(monster):
                             engine.MONSTERS[current_room_index].remove(monster)
-                            chance = [EMPTY_CELL, EMPTY_CELL, COIN, BASIC_WEAPON]
+                            chance = [EMPTY_CELL, COIN]
                             current_room[monster['X']][monster['Y']] = random.choice(chance)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
@@ -159,7 +159,7 @@ def main() -> None:
                 print("What do you want?")
                 answer = input("1. Potion (1 coin), 2. Weapon (5 coin), 3. Nevermind: ")
                 if answer == '1':
-                    if player['COINS'] >= 1:
+                    if player['COINS'] >= 10:
                         print("Here is a potion.")
                         time.sleep(1.5)
                         while True:
@@ -173,7 +173,7 @@ def main() -> None:
                         print("You don't have enough money!")
                         time.sleep(1)
                 elif answer == '2':
-                    if player['COINS'] >= 5:
+                    if player['COINS'] >= 50:
                         pass  # TODO implement buying better weapon
                     else:
                         print("You don't have enough money!")
@@ -183,7 +183,7 @@ def main() -> None:
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
                 if player['HP'] < 100:
-                    player['HP'] += 10
+                    player['HP'] += 15
                     player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == POTION:

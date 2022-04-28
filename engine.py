@@ -59,7 +59,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (2, 27), TACO)
         place_object(room, (3, 19), TACO)
         place_object(room, (1, 17), TACO)
-        place_object(room, (16, 16), NPC)
+        place_object(room, (16, 25), NPC)
         monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
         MONSTERS.append([place_monster(room, monster_position) for monster_position in monster_positions])
 
@@ -68,9 +68,13 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_inner_wall(room, (15, 11), (15, 11))
         place_inner_wall(room, (4, 20), (4, 20))
         place_inner_wall(room, (10, 20), (10, 20))
+        place_object(room, (3, 20), TACO)
+        place_object(room, (12, 28), TACO)
+        place_object(room, (18, 3), TACO)
+        place_object(room, (2, 2), TACO)
         monster_positions = []
         MONSTERS.append([place_monster(room, monster_position) for monster_position in monster_positions])
-        boss_positions = [(10, 10), (10, 11), (10, 12), (11, 10), (11, 11), (11, 12), (12, 10), (12, 11), (12, 12)]
+        boss_positions = [(10, 10), (10, 11), (10, 12), (10, 13), (10, 14), (11, 10), (11, 11), (11, 12), (11, 13), (11, 14), (12, 10), (12, 11), (12, 12), (12, 13), (12, 14), (13, 10), (13, 11), (13, 12), (13, 13), (13, 14), (14, 10), (14, 11), (14, 12), (14, 13), (14, 14)]
         BOSSES.append([place_boss(room, boss_position) for boss_position in boss_positions])
 
     return room
