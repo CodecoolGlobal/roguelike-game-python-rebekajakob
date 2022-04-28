@@ -13,8 +13,8 @@ import termios
 
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
-PLAYER_START_X = 4
-PLAYER_START_Y = 28
+# PLAYER_START_X = 4
+# PLAYER_START_Y = 28
 
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
@@ -97,7 +97,8 @@ def main() -> None:
                 if not handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates): 
                     break
     finally:
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+        exit()
+        # termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
 def handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates):
@@ -107,6 +108,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
     elif button == 'c':
         player['COINS'] = 999
         player['HP'] = 999
+        player['ATTACK'] = 999
     elif button == 'i':
         inv = ', '.join(player['INVENTORY'])
         print(inv)
