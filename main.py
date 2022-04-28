@@ -84,6 +84,7 @@ def main() -> None:
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     util.clear_screen()
 
+
     def isData():
         return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
 
@@ -91,7 +92,7 @@ def main() -> None:
     try:
         tty.setcbreak(sys.stdin.fileno())
         timer = 0
-        game_state = {"current_room_index": 0, "current_room":board[0], 'cheater': False}
+        game_state = {"current_room_index": 0, "current_room":board[0], 'cheater': False, "dead_monsters": 0}
         while True:
             if 'BASIC WEAPON' in player['INVENTORY']:
                 player['ATTACK'] = 10
@@ -106,9 +107,9 @@ def main() -> None:
             time.sleep(0.02)
             if isData():
                 button = sys.stdin.read(1)
-                if button == '\x1b':         # x1b is ESC
+                if button == '\x1b':        # x1b is ESC
                     break
-                if not handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates): 
+                if handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates) is False: 
                     break
     finally:
         exit()
@@ -128,7 +129,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
             print(f"INVENTORY: {', '.join(player['INVENTORY'])}")
             time.sleep(2)
     elif button == "p":
-        print(f"STATISTICS: DEAD MONSTERS: {dead_monsters}")
+        print(f"STATISTICS: DEAD MONSTERS: {game_state['dead_monsters']}")
         time.sleep(2)
     direction_vectors = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
     if button in direction_vectors:
@@ -172,12 +173,12 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == STRONG_MONSTER:
             player['HP'] -= int(15 * random.uniform(0.7, 1.3))
-            for monster in engine.STRONG_MONSTERS[current_room_index]:
+            for monster in engine.STRONG_MONSTERS[game_state["current_room_index"]]:
                 if monster['X'] == player_coordinates[0] + direction[0] and monster['Y'] == player_coordinates[1] + direction[1]:
                     monster['HP'] -= player['ATTACK'] * random.uniform(0.7, 1.3)
                     if engine.check_creature_is_dead(monster):
                         engine.STRONG_MONSTERS[game_state["current_room_index"]].remove(monster)
-                        dead_monsters += 1
+                        game_state["dead_monsters"] += 1
                         chance = [COIN]
                         current_room[monster['X']][monster['Y']] = random.choice(chance)
 
@@ -201,11 +202,11 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
                         chance = [EMPTY_CELL]
                         current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                     if len(engine.BOSSES[0]) == 0:
-                        dead_monsters += 1
+                        game_state["dead_monsters"] += 1
                         util.clear_screen()
                         ui.display_board(current_room, player, color_scheme)
-                        if not cheater:
-                            highscore = player['NAME'], str(player['COINS']), str(dead_monsters)
+                        if not game_state["cheater"]:
+                            highscore = player['NAME'], str(player['COINS']), str(game_state["dead_monsters"])
                             with open("log.txt", "a") as log:
                                 log.write((' '.join(highscore) + '\n'))
                         print("YOU WON THE GAME!!")
@@ -216,7 +217,6 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
                 answer = input('Do you want to hunt more? (Y,N): ')
                 if answer == 'y':
                     engine.spawn_monsters(current_room)
-                    util.clear_screen()
                     ui.display_board(current_room, player, color_scheme)
                      
             
@@ -266,8 +266,6 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
         if engine.check_creature_is_dead(player):
             player['HP'] = 0
             current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
-            is_running = False
-            util.clear_screen()
             ui.display_board(current_room, player, color_scheme)
             print("GAME OVER! You are dead!")
             print()
@@ -308,7 +306,7 @@ def do_monster_movement(game_state, current_room, timer, player, color_scheme):
                     boss_coordinates = engine.new_creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
-        ui.display_board(current_room, player, color_scheme, game_state["current_room_index"])
+        ui.display_board(current_room, player, color_scheme)
         
 
 
