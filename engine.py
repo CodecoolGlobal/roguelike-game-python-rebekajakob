@@ -87,6 +87,11 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
 
     return room
 
+def spawn_monsters(room):
+    monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
+    MONSTERS[1] = ([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
+    strong_monster_positions = [(3, 22), (10,22)]
+    STRONG_MONSTERS[1] = ([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
 
 def create_monster() -> dict:
     """Sets the monster's attributes

@@ -181,6 +181,12 @@ def main() -> None:
                             exit()
 
             elif engine.check_target_cell(current_room, player_coordinates, direction) == NPC:
+                if len(engine.MONSTERS[1]) == 0 and len(engine.STRONG_MONSTERS[1]) == 0:
+                    answer = input('Do you want to hunt more? (Y,N): ')
+                    if answer == 'y':
+                        engine.spawn_monsters(current_room)
+                    
+                
                 print("What do you want?")
                 answer = input("1. Potion (10 coin), 2. Weapon (50 coin), 3. Nevermind: ")
                 if answer == '1':
