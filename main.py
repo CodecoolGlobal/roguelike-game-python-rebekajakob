@@ -13,8 +13,8 @@ import termios
 
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
-# PLAYER_START_X = 4
-# PLAYER_START_Y = 28
+PLAYER_START_X = 4
+PLAYER_START_Y = 28
 
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
@@ -180,7 +180,7 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
                         current_room[boss_part['X']][boss_part['Y']] = random.choice(chance)
                     if len(engine.BOSSES[0]) == 0:
                         # util.clear_screen()
-                        ui.display_board(current_room, player, color_scheme)
+                        ui.display_board(current_room, player, color_scheme, current_room_index)
                         print("YOU WON THE GAME!!")
                         exit()
 
@@ -237,13 +237,13 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
         if engine.check_creature_is_dead(player):
             current_room[player_coordinates[0]][player_coordinates[1]] = DEAD_PLAYER
             # util.clear_screen()
-            ui.display_board(current_room, player, color_scheme)
+            ui.display_board(current_room, player, color_scheme, current_room_index)
             print("GAME OVER! You are dead!")
             print()
-            return "DEAD"
+            
         
-        ui.display_board(current_room, player, color_scheme)
-    return "NOTHING"
+        ui.display_board(current_room, player, color_scheme, current_room_index)
+    
 
 
 def do_monster_movement(current_room_index, current_room, timer, player, color_scheme):
@@ -277,7 +277,8 @@ def do_monster_movement(current_room_index, current_room, timer, player, color_s
                     boss_coordinates = engine.new_creature_position((boss['X'], boss['Y']), new_directions)
                     boss['X'], boss['Y'] = boss_coordinates[0], boss_coordinates[1]
                     current_room[boss_coordinates[0]][boss_coordinates[1]] = BOSS
-        ui.display_board(current_room, player, color_scheme)
+        ui.display_board(current_room, player, color_scheme, current_room_index)
+        
 
 
 
