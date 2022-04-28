@@ -240,10 +240,10 @@ def handle_keypress(button, player, current_room, current_room_index, board, col
             ui.display_board(current_room, player, color_scheme, current_room_index)
             print("GAME OVER! You are dead!")
             print()
-            
+            return False
         
         ui.display_board(current_room, player, color_scheme, current_room_index)
-    
+    return True
 
 
 def do_monster_movement(current_room_index, current_room, timer, player, color_scheme):
