@@ -82,7 +82,10 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
         strong_monster_positions = []
         STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
-        boss_positions = [(10, 10), (10, 11), (10, 12), (10, 13), (10, 14), (11, 10), (11, 11), (11, 12), (11, 13), (11, 14), (12, 10), (12, 11), (12, 12), (12, 13), (12, 14), (13, 10), (13, 11), (13, 12), (13, 13), (13, 14), (14, 10), (14, 11), (14, 12), (14, 13), (14, 14)]
+        boss_positions = []
+        for x in range(10, 15):
+            for y in range(10, 15):
+                boss_positions.append((x, y))
         BOSSES.append([place_boss(room, boss_position) for boss_position in boss_positions])
 
     return room
