@@ -159,6 +159,7 @@ def handle_keypress(button: str, player: dict, current_room: int, game_state: di
                     monster['HP'] -= player['ATTACK'] * engine.random_damage_multiplier()
                     if engine.check_creature_is_dead(monster):
                         engine.MONSTERS[game_state["current_room_index"]].remove(monster)
+                        game_state['dead_monsters'] += 1
                         chance = [EMPTY_CELL, COIN]
                         current_room[monster['X']][monster['Y']] = random.choice(chance)
 
