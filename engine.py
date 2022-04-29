@@ -1,3 +1,5 @@
+import random
+
 EMPTY_CELL = 0
 WALL_CELL = 1
 ENTRY_DOOR = 2
@@ -48,10 +50,10 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (9, 22), TACO)
         place_object(room, (5, 5), BASIC_WEAPON)
         monster_positions = [(5, 7), (4, 27), (17, 25)]
-        MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
+        MONSTERS.append([place_monster(room, monster_position, MONSTER) for monster_position in monster_positions])
         strong_monster_positions = []
-        STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
-        
+        STRONG_MONSTERS.append([place_monster(room, strong_monster_position, STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
+
     if level == 1:
         place_inner_wall(room, (0, 8), (15, 8))
         place_inner_wall(room, (10, 14), (19, 14))
@@ -65,9 +67,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (1, 17), TACO)
         place_object(room, (16, 25), NPC)
         monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
-        MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
-        strong_monster_positions = [(3, 22), (10,22)]
-        STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
+        MONSTERS.append([place_monster(room, monster_position, MONSTER) for monster_position in monster_positions])
+        strong_monster_positions = [(3, 22), (10, 22)]
+        STRONG_MONSTERS.append([place_monster(room, strong_monster_position, STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
 
     if level == 2:
         place_inner_wall(room, (5, 10), (5, 10))
@@ -79,9 +81,9 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
         place_object(room, (18, 3), TACO)
         place_object(room, (2, 2), TACO)
         monster_positions = []
-        MONSTERS.append([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
+        MONSTERS.append([place_monster(room, monster_position, MONSTER) for monster_position in monster_positions])
         strong_monster_positions = []
-        STRONG_MONSTERS.append([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
+        STRONG_MONSTERS.append([place_monster(room, strong_monster_position, STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
         boss_positions = []
         for x in range(10, 15):
             for y in range(10, 15):
@@ -90,11 +92,13 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
 
     return room
 
+
 def spawn_monsters(room):
     monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
-    MONSTERS[1] = ([place_monster(room, monster_position,MONSTER) for monster_position in monster_positions])
-    strong_monster_positions = [(3, 22), (10,22)]
-    STRONG_MONSTERS[1] = ([place_monster(room, strong_monster_position,STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
+    MONSTERS[1] = ([place_monster(room, monster_position, MONSTER) for monster_position in monster_positions])
+    strong_monster_positions = [(3, 22), (10, 22)]
+    STRONG_MONSTERS[1] = ([place_monster(room, strong_monster_position, STRONG_MONSTER) for strong_monster_position in strong_monster_positions])
+
 
 def create_monster() -> dict:
     """Sets the monster's attributes
@@ -103,12 +107,14 @@ def create_monster() -> dict:
     monster = {'X': 0, 'Y': 0, 'HP': 10}
     return monster
 
+
 def create_strong_monster() -> dict:
     """Sets the monster's attributes
     'HP'= hitpoint
     """
     monster = {'X': 0, 'Y': 0, 'HP': 25}
     return monster
+
 
 def place_monster(room: list, coordinate: tuple, monster_type) -> None:
     if monster_type == MONSTER:
@@ -199,6 +205,10 @@ def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -
 
 def check_creature_is_dead(player: dict) -> None:
     return player['HP'] <= 0
+
+
+def random_damage_multiplier(lower_bound: float = 0.7, upper_bound: float = 1.3):
+    return random.uniform(lower_bound, upper_bound)
 
 
 if __name__ == "__main__":
