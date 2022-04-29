@@ -1,4 +1,3 @@
-from defer import return_value
 import util
 import engine
 import ui
@@ -11,8 +10,6 @@ import termios
 
 PLAYER_START_X = 17
 PLAYER_START_Y = 2
-# PLAYER_START_X = 4
-# PLAYER_START_Y = 28
 
 BOARD_WIDTH = 30
 BOARD_HEIGHT = 20
@@ -112,7 +109,7 @@ def main() -> None:
         # termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
-def handle_keypress(button, player, current_room, game_state, board, color_scheme, player_coordinates):
+def handle_keypress(button: str, player: dict, current_room: int, game_state: dict, board: list, color_scheme: dict, player_coordinates: tuple) -> bool:
     if button == 'q':
         print("Goodbye!")
         exit()
@@ -131,7 +128,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
     if button in direction_vectors:
         direction = direction_vectors[button]
         if engine.check_target_cell(current_room, player_coordinates, direction) == EMPTY_CELL:
-            player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+            player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == ENTRY_DOOR:
             current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
@@ -153,7 +150,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == COIN:
             player['COINS'] += random.randrange(5, 21)
-            player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+            player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == MONSTER:
             player['HP'] -= int(15 * engine.random_damage_multiplier())
@@ -179,12 +176,12 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
         elif engine.check_target_cell(current_room, player_coordinates, direction) == BASIC_WEAPON:
             if 'BASIC WEAPON'not in player['INVENTORY']:
                 player['INVENTORY'].append('BASIC WEAPON')
-            player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+            player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == ADVANCED_WEAPON:
             if 'ADVANCED WEAPON'not in player['INVENTORY']:
                 player['INVENTORY'].append('ADVANCED WEAPON')
-            player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+            player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == BOSS:
             player['HP'] -= int(15 * engine.random_damage_multiplier())
@@ -251,12 +248,12 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
         elif engine.check_target_cell(current_room, player_coordinates, direction) == TACO:
             if player['HP'] < 85:
                 player['HP'] += 15
-                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+                player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         elif engine.check_target_cell(current_room, player_coordinates, direction) == POTION:
             if player['HP'] < 100:
                 player['HP'] = 100
-                player_coordinates = engine.player_step_there(player, current_room, player_coordinates, direction)
+                player_coordinates = engine.move_player_there(player, current_room, player_coordinates, direction)
 
         if engine.check_creature_is_dead(player):
             player['HP'] = 0
@@ -271,7 +268,7 @@ def handle_keypress(button, player, current_room, game_state, board, color_schem
     return True
 
 
-def do_monster_movement(game_state, current_room, timer, player, color_scheme):
+def do_monster_movement(game_state: dict, current_room: int, timer: int, player: dict, color_scheme: dict) -> None:
     if timer % 50 == 0:
         for monster in engine.MONSTERS[game_state["current_room_index"]]:
             new_directions = random.choice([(-1, 0), (1, 0), (0, -1), (0, 1)])

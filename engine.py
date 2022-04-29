@@ -93,7 +93,7 @@ def create_room(entry_door: tuple, exit_door: tuple, level: int, width: int, hei
     return room
 
 
-def spawn_monsters(room):
+def spawn_monsters(room: list) -> None:
     monster_positions = [(3, 8), (8, 5), (15, 13), (18, 9), (3, 27)]
     MONSTERS[1] = ([place_monster(room, monster_position, MONSTER) for monster_position in monster_positions])
     strong_monster_positions = [(3, 22), (10, 22)]
@@ -116,7 +116,7 @@ def create_strong_monster() -> dict:
     return monster
 
 
-def place_monster(room: list, coordinate: tuple, monster_type) -> None:
+def place_monster(room: list, coordinate: tuple, monster_type) -> dict:
     if monster_type == MONSTER:
         monster = create_monster()
     elif monster_type == STRONG_MONSTER:
@@ -135,7 +135,7 @@ def create_boss() -> dict:
     return boss
 
 
-def place_boss(room: list, coordinate: tuple) -> None:
+def place_boss(room: list, coordinate: tuple) -> dict:
     boss = create_boss()
     room[coordinate[0]][coordinate[1]] = BOSS
     boss['X'] = coordinate[0]
@@ -147,7 +147,7 @@ def place_object(room: int, coordinate: tuple, item: int) -> None:
     room[coordinate[0]][coordinate[1]] = item
 
 
-def create_board(width, heigth) -> list:
+def create_board(width: int, heigth: int) -> list:
     """Puts the rooms together into one board list
     (rooms need to be added manually)
     """
@@ -188,7 +188,7 @@ def put_player_on_board(room: list, player: dict) -> None:
     room[player['X']][player['Y']] = PLAYER
 
 
-def player_step_there(player: dict, current_room: list, player_coordinates: tuple, direction: tuple) -> tuple:
+def move_player_there(player: dict, current_room: list, player_coordinates: tuple, direction: tuple) -> tuple:
     current_room[player_coordinates[0]][player_coordinates[1]] = EMPTY_CELL
     player_coordinates = new_creature_position(player_coordinates, direction)
     player['X'], player['Y'] = player_coordinates[0], player_coordinates[1]
@@ -203,11 +203,11 @@ def check_target_cell(room: list, player_coordinates: tuple, direction: tuple) -
     return room[potential_cell[0]][potential_cell[1]]
 
 
-def check_creature_is_dead(player: dict) -> None:
+def check_creature_is_dead(player: dict) -> bool:
     return player['HP'] <= 0
 
 
-def random_damage_multiplier(lower_bound: float = 0.7, upper_bound: float = 1.3):
+def random_damage_multiplier(lower_bound: float = 0.7, upper_bound: float = 1.3) -> float:
     return random.uniform(lower_bound, upper_bound)
 
 

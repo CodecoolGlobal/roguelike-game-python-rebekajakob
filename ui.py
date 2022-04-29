@@ -12,7 +12,7 @@ def display_board(board: list, player: dict, color_scheme: dict) -> None:
     print()
 
 
-def menu():
+def menu() -> int:
     print('''
     1. New Game
     2. Highscore
@@ -25,7 +25,7 @@ def menu():
     return int(menu_option)
 
 
-def greet():
+def greet() -> None:
     print('''Hello adventurer''')
     answer = input('Are you ready for the game of your life? (y/n) ')
     if answer == "n":
@@ -33,7 +33,7 @@ def greet():
         exit()
 
 
-def credits():
+def credits() -> None:
     print('''Our lovely creators are:
     Balazs Mucsanyi
     Botond Bata
@@ -45,7 +45,7 @@ def credits():
     ''')
 
 
-def newgame_settings():
+def newgame_settings() -> tuple:
     name = input("Please give me your name: ")
     valid_avatars = ["🤠", "👳", "👸", "🧝", "👮"]
     print('''Available avatars:
@@ -61,7 +61,7 @@ def newgame_settings():
     return name, valid_avatars[int(avatar_number)-1]
 
 
-def highscore():
+def highscore() -> None:
     with open("log.txt", "r") as text:
         scores = text.read().splitlines()
         high_scores = []
@@ -74,7 +74,7 @@ def highscore():
             print(item[1] + "  " + str(item[0]))
 
 
-def roll_the_credits(speed: int = 0.2):
+def roll_the_credits(speed: float = 0.2) -> None:
     credits = '''Our lovely creators are:
 
     Balazs Mucsanyi
