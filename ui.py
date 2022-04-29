@@ -73,9 +73,22 @@ def highscore():
             print(item[1] + "  " + str(item[0]))
 
 
-def roll_the_credits():
-    print()
-    credits()
-    for _ in range(35):
+def roll_the_credits(speed: int = 0.2):
+    credits = '''Our lovely creators are:
+
+    Balazs Mucsanyi
+    Botond Bata
+    Daniel Dudas
+    Gabor Gabor
+    Gabor Nagy
+    Gergely Sarkadi
+    Rebeka Jakob
+    '''
+    print('\n' * 3)
+    time.sleep(speed)
+    for name in credits.split('\n'):
+        print(name)
+        time.sleep(speed)
+    for _ in range(30):
         print()
-        time.sleep(0.2)
+        time.sleep(speed)
