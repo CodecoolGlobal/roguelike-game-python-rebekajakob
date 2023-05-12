@@ -1,4 +1,4 @@
-# roguelike-game-python
+# Roguelike game in python
 ### How to run
 #### Clone the development branch
 ```
@@ -10,5 +10,6 @@ cd roguelike-game-python-rebekajakob
 python3 main.py
 ```
 ### About the game
-you can move using WASD
+You can move using WASD
+
 Colliding with monsters takes hp from both them and the player
